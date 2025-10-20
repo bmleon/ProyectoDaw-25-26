@@ -1,32 +1,30 @@
-import { BadRequestException, Body, Controller, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
-//import type { IUsers } from './interfaces/IUsuario';
 import { CreateUserDto } from './dto/create-user.dto';
-import { identity } from 'rxjs';
-import { version } from 'os';
 
-@Controller('usuarios')
+@Controller('usuarios') /* tabla de mapeo ruta y controlador */
 export class UsuariosController {
-  // inyectar el servicio UsuariosService en UsuariosController
-  // solo se inyectan clases con el decorador @Injectable
+  //inyectar el servicio UsuariosService en UsuariosController
+  //solo se inyectan clases con el decorador @Injectable
   constructor(private readonly usuariosService: UsuariosService) {}
 
-  @Get() /*Endpoint raiz */
+  @Get() /* endponit raiz -- home */
   getHome(){
-    return 'Home de la sección  usuarios'
+    return 'home del seccion usuarios';
   }
 
-  // Devuelve todos los productos --> en la bd sera un Select * from ...
-  @Get('all')
+  //devuelve todos los productos 
+  // --> select * from productos
+  @Get('all') /* endponit raiz */
   getAll(){
     return this.usuariosService.findAll();
   }
 
-  // Se le pasa el SId por Get y se devielve ese objeto
-  // En la base de datos sera un Select * from productos where sid = productos.id
+  //se le pasa el $id por Get y se devuelve ese producto (objeto)
+  // ---> select * from productos where $id = productos.id
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe({version: '4'})) id: number){
-    console.log('id');
+  findOne(@Param ('id', new ParseUUIDPipe({version: '4'})) id: number){
+
     return this.usuariosService.findOne(id);
 
   }
@@ -34,42 +32,43 @@ export class UsuariosController {
   //Métodos ENDPOINT --> DECORADOR get, post, put, delete...
   @Post('new') /* endponit raiz */
   add(@Body() usuarioDTO: CreateUserDto){
-    
-    console.log('Usuario recibido', usuarioDTO);
     return this.usuariosService.new(usuarioDTO);
   }
-
-
-  // metodo interno para borrar usuarios..No es un Endpoint
+  //metodo interno para borrar usuarios., NO ES ENDPOINT
   delete(){
     return 'borrado de usuarios'
   }
-}
 /*
-// variables bandera
-    let esNumber : Boolean = true; //supongo que no es un número
-    let esMayor18 : Boolean = true; // supongo que no es mayor de 18
-    let msgerror: string[] = []; // Lo ponemos asi para inicializarlo 
-    // extraer los datos manualmente de los datos (Request)--> Caso express...
-    // debemos de validarlo --> email este ok
-    // usuario = peticion.body;
-    // extraer los datos del body(Post) o paramentros(Get) de la resquest
-    console.log (usuario.email, usuario.edad)
-    // mi controlador debe de validar los datos: edad > 18 y email correcto
-    if (typeof usuario.edad !== "number"){
+  add(@Body() usuario: IUser){
+    // ----- validar edad ----- 
+    //variables bnadera
+    let esNumber: Boolean = true; //supongo que no es un número
+    let esmayor18: Boolean = true; //supongo que no es mayor de 18
+    let esemilook: Boolean = true; //supongo que el email es correcto
+    let msgerror: String[]=[];
+    //extraer manualmente los datos del body (REQUEST) --> caso express ... 
+    //debemos de VALIDARLO --> email este ok
+    //usuario = peticion.body;
+    console.log (usuario.email, usuario.edad);
+    //mi controlador debe de validad los datos: edad > 18 y email correcto
+    if (typeof usuario.edad !== 'number'){
       esNumber = false;
-      msgerror.push('La edad debe ser un número. ');
+      msgerror.push("La edad debe ser un número ");
     }
     if (usuario.edad < 18){
-      esMayor18 = false;
-      msgerror.push('y la edad debe ser mayor de 18 años. ');
+      esmayor18 = false;
+      msgerror.push("La edad debe ser mayor de 18");
     }
-    if (!esNumber || !esMayor18){
+    if (!esNumber || !esmayor18){
       throw new BadRequestException({
         success: false,
-        msg: msgerror
+        message: msgerror
       })
     }
+    
+    //---- validad email ----
+    msgerror.push("El email no es correcto falta @");
     console.log('Usuario recibido', usuario);
-    //return this.usuariosService.new(usuario);
-*/
+
+  } */
+}
