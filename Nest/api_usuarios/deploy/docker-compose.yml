@@ -1,15 +1,14 @@
 version: '3.9'
 services:
   db:
-  image: postgres:15
-  container_name: postgresDB
-  restart: always
-  environment:
-    POSTGRES_USER: admin
-    POSTGRES_PASSWORD: admin
-    POSTGRES_DB: bdusuarios 
-  ports:
-    - "5432:5432"
-  volumes:
-    - "./data:/var/lib/postgresql/data"
-  
+    image: postgres:15
+    container_name: postgressDB
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: bdusuarios
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
