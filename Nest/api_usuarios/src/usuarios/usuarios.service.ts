@@ -12,13 +12,13 @@ export class UsuariosService {
     this.db = new Low<Data>(adaptador, { users: [] } );
   }
 
-  async findOne(id: number): Promise<IUser>{
-    console.log(id)
-    const data = await this.db.read();//se bloquea
- //   const usuario = this.db.data.users.find(usuario => usuario.id === parseInt(id));
-   // console.log(usuario)
-    return null;
-  }
+async findOne(id: number): Promise<IUser | null>{
+  console.log(id)
+  await this.db.read();//se bloquea
+  const usuario = this.db.data?.users.find(usuario => usuario.id === id) ?? null;
+  // console.log(usuario)
+  return usuario;
+}
   async findAll():Promise<IUser[]>{
     await this.db.read();//se bloquea
     return this.db.data.users;
