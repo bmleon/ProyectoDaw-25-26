@@ -3,16 +3,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [UsuariosModule,
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: '38.242.240.106',
-      port: 5432,
-      database: 'bdusuarios',
-      username: 'admin',
-      password: 'admin',
+      host: process.env.DB_HOST,
+      password: process.env.DB_PASSWORD,
+      username: process.env.DB_USERNAME,
+      port: 5432,  
+      database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: true,
     })
@@ -20,4 +22,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor( private readonly configService: ConfigService ) {}
+}

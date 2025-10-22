@@ -1,4 +1,31 @@
 {
-    "users": []
-        
+  "users": [
+    {
+      "id": "9fb7bd33-5b8f-4ca0-bdf6-923d504ba5ab",
+      "edad": 58,
+      "name": "Belen",
+      "email": "belen@gmail.com",
+      "rol": "administrador",
+      "direcciones": [
+        {
+          "calle": "Calle de la Paz",
+          "numero": "15",
+          "ciudad": "Madrid",
+          "pais": "España"
+        },
+        {
+          "calle": "Avenida de América",
+          "numero": "23",
+          "ciudad": "Barcelona",
+          "pais": "España"
+        },
+        {
+          "calle": "Ronda de Levante",
+          "numero": "5",
+          "ciudad": "Valencia",
+          "pais": "España"
+        }
+      ]
+    }
+  ]
 }
