@@ -10,9 +10,10 @@ export class CreateUserDto {
     
     // @IsNumber() /* funcion externa que valida que es un número */
     @IsUUID() //ES UN IDENTIFICADOR UNICO UNIVERSAL 32 o 36 caracteres (-)
-    id: number;
+    id: string;
     //Edad esta comprendidad entre 18 y 58
     @IsInt({message: 'La edad es un entero'}) /* funcion externa que valida que es un número */
+    @IsOptional()
     @Min(18, {message: 'La edad minima es 18 años'})
     @Max(58, {message: 'La edad maxima es 58 años'})
     edad: number;
