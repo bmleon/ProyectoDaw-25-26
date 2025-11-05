@@ -1,9 +1,11 @@
 // ***ORM --> Mapeo Objeto-Relacional***
 // Realizar automaticamente el create table usuario {id....}
 
-import { AfterInsert, BeforeInsert, Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-
+import { AfterInsert, BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { AddressDto } from "src/common/dto/addres.dto";
+import { clientes } from "src/modulos/clientes/entities/clientes.entity";
 // Logica de negocio de la entidad usuario
+
 @Entity('usuario') //nombre de la tabla en la base de datos 
 export class Usuario {  
     @PrimaryColumn()
@@ -13,7 +15,7 @@ export class Usuario {
     id: string;
 
     @Column({nullable: true, length: 30})
-    name: string;
+    username: string;
     @Column('int', {default: 18})
     edad: number;
     @Column({nullable:false, unique: true})
@@ -21,7 +23,23 @@ export class Usuario {
 
     @Column()
     rol: string;
+
+    @Column(() => AddressDto, { prefix: 'direccion' }) 
+    direccion: AddressDto;
+
+    @OneToOne(
+        () => clientes,
+        (Cliente) => Cliente.usuario, {cascade: true}
+    )
+    @JoinColumn({
+        name: 'cliente',
+        foreignKeyConstraintName: 'fk_cliente_en_usuario'
+    }) // genera la Fkey
+    cliente: clientes
     
+    /* ***** MECANISMOS DE SEGUIRDAD****** */
+    // monitorizar y auditar los registros de ususario y una tabla de accesos
+    //--> login/logout/change profile
     @CreateDateColumn()
     createdAt: Date;
     @UpdateDateColumn()
@@ -34,10 +52,10 @@ export class Usuario {
     @BeforeInsert() // evento disparador
     checkName(){ // metodo manejardor del evento
         console.log('Antes de insertar el usuario en la BD')
-        if (!this.name){
-            this.name = 'invitado';
+        if (!this.username){
+            this.username = 'invitado';
         }
-        this.name = this.name
+        this.username = this.username
                     .replaceAll(' ', '_')
                     .toUpperCase();
         

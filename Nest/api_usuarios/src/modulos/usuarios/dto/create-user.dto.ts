@@ -1,5 +1,5 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsEmail, IsEmpty, IsIn, IsInt, IsNumber, IsOptional, IsString, IsBoolean, IsUUID, Matches, Max, MaxLength, Min, MinLength, validate, ValidateNested } from "class-validator";
-
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsEmail, IsEmpty, IsIn, IsInt, IsNumber, IsOptional, IsString, IsBoolean, IsUUID, Matches, Max, MaxLength, Min, MinLength, validate, ValidateNested, IsObject } from "class-validator";
+import { AddressDto } from "../../../common/dto/addres.dto";
 import { AdressDto } from "./adress.dto";
 import { Type } from "class-transformer";
 
@@ -22,7 +22,7 @@ export class CreateUserDto {
     @IsString() /* funcion externa que valida que es un string */
     @MinLength(5, {message: 'namo: Minimo 5 caracteres'})
     @MaxLength(8, {message: 'name: Maximo 8 caracteres'})
-    name: string;
+    username: string;
 
     @IsEmail() /* funcion externa que valida que es un string */
     email: string;
@@ -44,12 +44,23 @@ export class CreateUserDto {
     @IsOptional()
     @IsBoolean()
     esdelMadrid: boolean; //true o false
+    
+    @IsNumber()
+    password: number;
 
-    @IsOptional()
-    @IsArray()
-    @ArrayMinSize(3, {message: 'Debe tener al menos 3 direcciones'})
-    @ValidateNested({each: true}) //valida cada uno de los elementos del array
-    @Type(() => AdressDto) //indica el tipo de los elementos del array
-    direcciones: AdressDto[]; //array de direcciones
+    @IsString()
+    foto: string;
+
+    
+
+    // @IsOptional()
+    // @IsArray()
+    // @ArrayMinSize(3, {message: 'Debe tener al menos 3 direcciones'})
+    // @ValidateNested({each: true}) //valida cada uno de los elementos del array
+    // @Type(() => AdressDto) //indica el tipo de los elementos del array
+    
+    @ValidateNested()// valida cada uno de los elementos del array 
+    @Type(() => AddressDto)
+    direccion: AddressDto; //array de direcciones
    
 }

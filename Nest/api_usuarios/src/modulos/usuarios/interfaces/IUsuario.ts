@@ -12,7 +12,7 @@ export interface IAdress {
 }
 export interface IUser {
     id: string; //uuid
-    name: string;
+    username: string;
     email: string;
     edad: number;
     rol: string;

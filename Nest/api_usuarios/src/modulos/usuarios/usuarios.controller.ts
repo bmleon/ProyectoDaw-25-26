@@ -32,7 +32,7 @@ export class UsuariosController {
   //Métodos ENDPOINT --> DECORADOR get, post, put, delete...
   @Post('new') /* endponit raiz */
   add(@Body() usuarioDTO: CreateUserDto){
-    return this.usuariosService.new(usuarioDTO);
+    //return this.usuariosService.new(usuarioDTO);
   }
   //metodo interno para borrar usuarios., NO ES ENDPOINT
   delete(){

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsuariosModule } from './usuarios/usuarios.module';
+import { UsuariosModule } from './modulos/usuarios/usuarios.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SeedModule } from './modulos/seed/seed.module';
 
 @Module({
   imports: [UsuariosModule,
@@ -17,7 +18,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: true,
-    })
+    }),
+    SeedModule
   ],
   controllers: [AppController],
   providers: [AppService],
