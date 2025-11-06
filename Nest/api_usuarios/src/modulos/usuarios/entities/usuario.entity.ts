@@ -2,7 +2,7 @@
 // Realizar automaticamente el create table usuario {id....}
 
 import { AfterInsert, BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { AddressDto } from "src/common/dto/addres.dto";
+import { AddressDto } from "src/common/modelo/dto/addres.dto";
 import { clientes } from "src/modulos/clientes/entities/clientes.entity";
 // Logica de negocio de la entidad usuario
 

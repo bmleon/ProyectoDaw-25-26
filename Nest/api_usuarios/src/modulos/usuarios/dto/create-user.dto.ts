@@ -1,5 +1,5 @@
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsEmail, IsEmpty, IsIn, IsInt, IsNumber, IsOptional, IsString, IsBoolean, IsUUID, Matches, Max, MaxLength, Min, MinLength, validate, ValidateNested, IsObject } from "class-validator";
-import { AddressDto } from "../../../common/dto/addres.dto";
+import { AddressDto } from "../../../common/modelo/dto/addres.dto";
 import { AdressDto } from "./adress.dto";
 import { Type } from "class-transformer";
 
@@ -9,8 +9,8 @@ const roles: string[] = ['administrador', 'usuario', 'invitado'];
 export class CreateUserDto {
     
     // @IsNumber() /* funcion externa que valida que es un número */
-    @IsUUID() //ES UN IDENTIFICADOR UNICO UNIVERSAL 32 o 36 caracteres (-)
-    id: string;
+    //@IsUUID() //ES UN IDENTIFICADOR UNICO UNIVERSAL 32 o 36 caracteres (-)
+    //id: string;
     //Edad esta comprendidad entre 18 y 58
     @IsInt({message: 'La edad es un entero'}) /* funcion externa que valida que es un número */
     @IsOptional()
@@ -45,12 +45,13 @@ export class CreateUserDto {
     @IsBoolean()
     esdelMadrid: boolean; //true o false
     
-    @IsNumber()
-    password: number;
+    @IsString()
+    password: string;
 
     @IsString()
     foto: string;
 
+    @ValidateNested()
     
 
     // @IsOptional()

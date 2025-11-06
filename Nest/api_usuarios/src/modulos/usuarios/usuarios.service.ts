@@ -32,6 +32,20 @@ async findOne(id: number): Promise<IUser | null>{
   }
 
   async new(UsuarioDto: IUser):Promise<IRespUser>{
+    // esto es para cuando tenemos un nif del cliente pero el usuario
+    /*
+    if (usuarioDto.nif){
+    console.log("Buscar cliente existente");
+    const cliente = await this.usuarioRepository.create(usuarioDto);
+    const usuarioEntity = this.usuarioRepository.create(usuario.Dto);
+    usuarioEntity.cliente = cliente;
+    conlose.log(cliente)
+    await this.usuarioRepository.save(usuarioEntity)
+    }else{
+      const usuarioEntity = this.usuarioRepository.create(UsuarioDto);
+      await this.usuarioRepository.save(usuarioEntity);
+    }
+    */
     //console.log(usuario)
     // transformar el objeto DTO en una entidad usuario
     //insertr el objeto usuario en la base de datos

@@ -2,7 +2,7 @@
 // Realizar automaticamente el create table usuario {id....}
 
 import { AfterInsert, BeforeInsert, Column, CreateDateColumn, Entity, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Address } from "src/common/entities/address";
+import { Address } from "src/common/modelo/entities/address";
 import { Usuario } from "src/modulos/usuarios/entities/usuario.entity";
 
 @Entity('clientes') //nombre de la tabla en la base de datos 
