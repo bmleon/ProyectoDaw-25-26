@@ -9,8 +9,8 @@ const roles: string[] = ['administrador', 'usuario', 'invitado'];
 export class CreateUserDto {
     
     // @IsNumber() /* funcion externa que valida que es un número */
-    //@IsUUID() //ES UN IDENTIFICADOR UNICO UNIVERSAL 32 o 36 caracteres (-)
-    //id: string;
+    @IsUUID() //ES UN IDENTIFICADOR UNICO UNIVERSAL 32 o 36 caracteres (-)
+    id?: string;
     //Edad esta comprendidad entre 18 y 58
     @IsInt({message: 'La edad es un entero'}) /* funcion externa que valida que es un número */
     @IsOptional()
@@ -32,11 +32,11 @@ export class CreateUserDto {
     @ArrayMinSize(2, {message: 'Debe tener al menos 2 teléfonos'})
     @ArrayMaxSize(3, {message: 'Debe tener  3 teléfonos'})    
     telefonos: string[];
-
+/*
     @IsOptional()
     @IsString()
     @Matches(/^\d{8}[A-Z]$/, {message: 'El nif no es correcto, 8 números y una letra mayúscula'})
-    nif: string;
+    nif: string;*/
 
     @IsIn(roles, {message: `El rol debe ser uno de los siguientes: ${roles}`})
     rol: string;
@@ -51,17 +51,18 @@ export class CreateUserDto {
     @IsString()
     foto: string;
 
-    @ValidateNested()
-    
-
     // @IsOptional()
     // @IsArray()
     // @ArrayMinSize(3, {message: 'Debe tener al menos 3 direcciones'})
     // @ValidateNested({each: true}) //valida cada uno de los elementos del array
     // @Type(() => AdressDto) //indica el tipo de los elementos del array
     
+    // caso 1
     @ValidateNested()// valida cada uno de los elementos del array 
     @Type(() => AddressDto)
     direccion: AddressDto; //array de direcciones
-   
+    
+    // caso 2
+    @IsString()
+    nif?: string;
 }

@@ -12,7 +12,7 @@ export class Usuario {
     nif: string;
 
     @Column('uuid')
-    id: string;
+    id?: string;
 
     @Column({nullable: true, length: 30})
     username: string;
@@ -29,13 +29,13 @@ export class Usuario {
 
     @OneToOne(
         () => clientes,
-        (Cliente) => Cliente.usuario, {cascade: true}
+        (cliente) => cliente.usuario, {cascade: true}
     )
     @JoinColumn({
         name: 'cliente',
         foreignKeyConstraintName: 'fk_cliente_en_usuario'
     }) // genera la Fkey
-    cliente: clientes
+    cliente: clientes | null;
     
     /* ***** MECANISMOS DE SEGUIRDAD****** */
     // monitorizar y auditar los registros de ususario y una tabla de accesos

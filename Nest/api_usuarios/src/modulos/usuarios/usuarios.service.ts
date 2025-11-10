@@ -5,6 +5,8 @@ import { IRespUser, IUser } from './interfaces/IUsuario';
 import { Usuario } from './entities/usuario.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ClientesService } from '../clientes/clientes.service';
+import { clientes } from '../clientes/entities/clientes.entity';
 
 type Data = { users: IUser[] }
 @Injectable()
@@ -14,7 +16,9 @@ export class UsuariosService {
   
   constructor(
     @InjectRepository(Usuario) 
-    private readonly usuarioRepository: Repository<Usuario>) {
+    private readonly usuarioRepository: Repository<Usuario>,
+    private readonly clientesService: ClientesService
+  ) {
     // const adaptador = new JSONFile<Data>('common/db/db.json');
     // this.db = new Low<Data>(adaptador, { users: [] } );
   }
@@ -31,34 +35,30 @@ async findOne(id: number): Promise<IUser | null>{
     //return this.db.data.users;
   }
 
-  async new(UsuarioDto: IUser):Promise<IRespUser>{
-    // esto es para cuando tenemos un nif del cliente pero el usuario
-    /*
-    if (usuarioDto.nif){
-    console.log("Buscar cliente existente");
-    const cliente = await this.usuarioRepository.create(usuarioDto);
-    const usuarioEntity = this.usuarioRepository.create(usuario.Dto);
-    usuarioEntity.cliente = cliente;
-    conlose.log(cliente)
-    await this.usuarioRepository.save(usuarioEntity)
-    }else{
-      const usuarioEntity = this.usuarioRepository.create(UsuarioDto);
-      await this.usuarioRepository.save(usuarioEntity);
+  async new(usuarioDTO: IUser):Promise<IRespUser>{
+
+    if (usuarioDTO.nif){
+      console.log("Buscar cliente existe");
+      const cliente = await this.clientesService.findOne(usuarioDTO.nif)
+      //transforma el objeto DTO/IFaz ---> obj Entity
+      const usuarioEntity = this.usuarioRepository.create(usuarioDTO);
+      //Prepara FK, u.cliente = puntero (direccion de memoria del ob cliente)
+      //no hace copia del obje cliente
+      usuarioEntity.cliente = cliente; //direccion de memoria
+      console.log(cliente, usuarioEntity)
+      await this.usuarioRepository.save(usuarioEntity)
+    } else {
+      const usuarioEntity = this.usuarioRepository.create(usuarioDTO);
+      //insert into Uusario (nif, nombre)...
+      await this.usuarioRepository.save(usuarioEntity) //insert --> bd
+    
     }
-    */
-    //console.log(usuario)
-    // transformar el objeto DTO en una entidad usuario
-    //insertr el objeto usuario en la base de datos
-    const usuarioEntity = this.usuarioRepository.create(UsuarioDto);
-    await this.usuarioRepository.save(usuarioEntity); 
-    // await this.db.read();// cargo la base de datos
-    // this.db.data.users.push(usuario); //inserta en el array users
-    // await this.db.write(); //escribe en el fichero
+     
     return {
       status: true,
       code: 200,
-      msg: 'Usuario creado',
-      data: usuarioEntity
+      msg: 'Usuario creado'
+      // data: usuarioEntity
     }
   }
 }

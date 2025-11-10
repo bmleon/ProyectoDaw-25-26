@@ -11,7 +11,7 @@ export interface IAdress {
     pais: string;
 }
 export interface IUser {
-    id: string; //uuid
+    id?: string; //uuid
     username: string;
     email: string;
     edad: number;
@@ -26,7 +26,7 @@ export interface IRespUser {
     status: boolean;
     code: number;
     msg: string;
-    data: IUser;
+    data?: IUser;
 }
 
 
