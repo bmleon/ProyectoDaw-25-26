@@ -3,30 +3,25 @@
 //Interfaces --> a las estructuras de datos que se transmiten por la red
 //types -->. para definir estructuras de datos internas o esquemas de datos
 //dtos --> para validar estructuraas de datos que se reciben desde la red
+import { IAdress } from "../../../common/interfaces/address";
+import { ICliente } from "src/modulos/clientes/interfaces/ICliente";
 
-export interface IAdress {
-    calle: string;
-    numero: string;
-    ciudad: string;
-    pais: string;
-}
 export interface IUser {
-    id?: string; //uuid
+    
     username: string;
     email: string;
-    edad: number;
+    password: string;
     rol: string;
-    telefonos?: string[];
+    foto?: string;
+    cliente?: ICliente;
     nif?: string;
-    esdelMadrid?: boolean;
-    direcciones?: IAdress[];
 } 
 
 export interface IRespUser {
     status: boolean;
     code: number;
     msg: string;
-    data?: IUser;
+    // data: IUser;
 }
 
 

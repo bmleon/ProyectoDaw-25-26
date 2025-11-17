@@ -3,8 +3,8 @@ import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
 import { IRespUser, IUser } from './interfaces/IUsuario';
 import { Usuario } from './entities/usuario.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
 import { ClientesService } from '../clientes/clientes.service';
 import { clientes } from '../clientes/entities/clientes.entity';
 
@@ -17,7 +17,9 @@ export class UsuariosService {
   constructor(
     @InjectRepository(Usuario) 
     private readonly usuarioRepository: Repository<Usuario>,
-    private readonly clientesService: ClientesService
+    private readonly clientesService: ClientesService,
+    @InjectDataSource()
+    private dataSource: DataSource //obj q contiene todo el esquema de la BD
   ) {
     // const adaptador = new JSONFile<Data>('common/db/db.json');
     // this.db = new Low<Data>(adaptador, { users: [] } );
@@ -61,4 +63,65 @@ async findOne(id: number): Promise<IUser | null>{
       // data: usuarioEntity
     }
   }
+  
+  async deleteAllUsuarios(){
+    console.log('Borrar usuarios')
+    const query = this.usuarioRepository.createQueryBuilder('usuario');
+    try{
+      return await query
+          .delete()
+          .where({})
+          .execute()
+    }catch(error){
+
+    }
+  }
+  async checkCascade(){ //Entidad - relacion - tipo (i/d/u)
+      //extrayendo en mtdata todo el esquema de la Entidad/Tabla Usuario
+      const metadata = this.dataSource.getMetadata(Usuario);
+      //console.log (metadata);
+      const relacion = metadata.relations.find(
+        (relacion) => relacion.propertyName == "cliente"
+      );
+      //console.log(relacion)
+      // --- ¡¡AQUÍ ESTÁ LA SOLUCIÓN!! ---
+      // Si 'relacion' es undefined (no se encontró), 
+      // devolvemos un objeto seguro con cascade: false.
+      if (!relacion) {
+        console.warn("Advertencia: No se encontró la relación 'cliente' en Usuario.");
+        return {
+          entidad: metadata.name,
+          propiedad: "cliente",
+          tipoRelacion: "desconocido",
+          cascade: false 
+        };
+      }
+      // --- FIN DE LA SOLUCIÓN ---
+      // Si el código llega aquí, TypeScript sabe que 'relacion' SÍ existe
+      // y ya no da error en las líneas siguientes.
+      const chcascade = relacion.isCascadeInsert || relacion.isCascadeUpdate;
+      return {
+        entidad: metadata.name,
+        propiedad: relacion.propertyName,
+        tipoRelacion: relacion.relationType,
+        cascade: chcascade
+      };
+    }
+  /* ASI ES COMO LO TIENE EL PROFESOR PERO A MI ME DA ERROR 
+  async checkCascade(){ //Entidad - relacion - tipo (i/d/u)
+      //extrayendo en mtdata todo el esquema de la Entidad/Tabla Usuario
+      const metadata = this.dataSource.getMetadata(Usuario);
+      //console.log (metadata);
+      const relacion = metadata.relations.find(
+        (relacion) => relacion.propertyName == "cliente"
+      );
+      //console.log(relacion)
+      const chcascade = relacion.isCascadeInsert || relacion.isCascadeUpdate;
+      return {
+        entidad: metadata.name,
+        propiedad: relacion.propertyName,
+        tipoRelacion: relacion.relationType,
+        cascade: chcascade
+      }
+    }*/
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { clientes } from './entities/clientes.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ICliente } from 'src/common/interfaces/address';
+import { ICliente } from '../clientes/interfaces/ICliente';
 import { Code } from 'typeorm/browser';
 
 @Injectable()
@@ -36,5 +36,18 @@ export class ClientesService {
         })
         console.log(cliente)
         return cliente;
+    }
+
+    async deleteAllclientes(){
+        console.log('Borrar clientes')
+        const query = this.clientesRepository.createQueryBuilder('clientes');
+        try {
+            return await query
+                .delete()
+                .where({})
+                .execute()
+        }catch(error){
+
+        }
     }
 }

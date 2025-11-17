@@ -48,25 +48,47 @@ export class Usuario {
     //deletedAt: Date;
     
     // podemos tener before/After-insert/update/remove
-    
-    @BeforeInsert() // evento disparador
-    checkName(){ // metodo manejardor del evento
-        console.log('Antes de insertar el usuario en la BD')
-        if (!this.username){
-            this.username = 'invitado';
-        }
-        this.username = this.username
-                    .replaceAll(' ', '_')
-                    .toUpperCase();
-        
+
+    @BeforeInsert()
+    checkusername(){
+        // jsanmar345
+        this.username =
+            this.cliente?.nombre + '.' +
+            this.cliente?.apellidos + '.' +
+            this.cliente?.edad
     }
     @BeforeInsert()
-    checkNif(){
-        console.log('Antes de insertar el nif en la bd')
-        if (!this.nif.includes ('-')){
-            const letra = this.nif.slice(-1);
-            const numeros = this.nif.slice(0, -1);
-            this.nif = `${numeros}-{letra}`;
-        }    
+    generarCredenciales(){
+        
+        if (!this.cliente || !this.cliente.nombre || !this.cliente.apellidos || !this.cliente.nif) {
+            console.error("ERROR @BeforeInsert: No se pueden generar credenciales. Faltan datos del Cliente (nombre, apellidos, nif).");
+            return; 
+        }
+
+        try {
+            const apellidosArray = this.cliente.apellidos.trim().split(' ');
+            const primerApellido = (apellidosArray[0] || '').toLowerCase();
+            const segundoApellido = (apellidosArray[1] || '').toLowerCase();
+            const inicialNombre = this.cliente.nombre.charAt(0).toLowerCase();
+            const partPrimerApellido = primerApellido.slice(0, 3);
+            const partSegundoApellido = segundoApellido.slice(0, 3);
+            const nifNumeros = this.cliente.nif.slice(0, -1);
+            const partNif = nifNumeros.slice(-3);
+
+            if (!inicialNombre || !partPrimerApellido || partNif.length < 3) {
+                console.warn("No se pudo auto-generar credenciales: los datos del cliente son muy cortos.");
+                return;
+            }
+
+            const baseString = '${inicialNombre}${partPrimerApellido}${partSegundoApellido}${partNif}';
+
+            this.username = baseString;
+            this.email = '${baseString}@g.educaand.es';
+
+            console.log(`Credenciales auto-generadas: username='${this.username}', email='${this.email}'`);
+
+        } catch (error) {
+            console.error("Error fatal al generar credenciales en @BeforeInsert:", error);
+        }
     }
 }

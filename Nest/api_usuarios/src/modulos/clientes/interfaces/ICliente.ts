@@ -1,4 +1,4 @@
-import { IAddress } from "src/common/modelo/interfaces/IAddress";
+import { IAddress } from "../../../common/modelo/interfaces/IAddress";
 
 // definir la estructura del objeto  que viene desde Internet
 export interface ICliente{
