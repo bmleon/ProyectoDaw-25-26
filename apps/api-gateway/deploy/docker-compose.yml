@@ -7,7 +7,7 @@ services:
       args:
         - MICROSERVICIO=${MICROSERVICIO}
     container_name: ukiyo-${MICROSERVICIO}
-    restart: unless-stopped
+    # restart: unless-stopped
     ports:
       - "3000:3000"
     env_file:
