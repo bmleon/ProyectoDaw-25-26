@@ -3,6 +3,7 @@ services:
     build:
       context: ../../../
       dockerfile: ./apps/${MICROSERVICIO}/deploy/Dockerfile
+      # dockerfile: ./deploy/Dockerfile
       args:
         - MICROSERVICIO=${MICROSERVICIO}
     container_name: ukiyo-${MICROSERVICIO}
@@ -11,6 +12,9 @@ services:
       - "3000:3000"
     env_file:
       - .env
+    volumes:
+      - ./logs:/root/logs
+      - /home/fabri/.ssh:/root/.ssh
     environment:
       - NODE_ENV=production
       # Variables para conectar con los ms
