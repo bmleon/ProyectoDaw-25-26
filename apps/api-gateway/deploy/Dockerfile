@@ -4,15 +4,15 @@ ARG CONTEXT
 ARG MICROSERVICIO
 ARG APP_MS=./apps/${MICROSERVICIO}
 
+RUN apk update && apk add --no-cache git
+
 WORKDIR /app
-
-RUN apk add --no-cache openssl bash
-
-RUN sed -i 's/\r$//' ./start.sh && chmod +x ./start.sh
+COPY ${APP_MS}/deploy/start.sh .
+RUN chmod +x ./start.sh
+RUN mkdir -p /root/logs
 
 # Exponer puerto
 EXPOSE 3000
-USER root
 
 # CMD ["tail", "-f", "/dev/null"]
-CMD ["./start.sh"]
+CMD ["sh", "/app/start.sh"]
