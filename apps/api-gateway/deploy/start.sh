@@ -55,7 +55,7 @@ main(){
 }
 
 main
-tail -f /dev/null
+# tail -f /dev/null
 
 # Mantener el contenedor vivo mostrando logs
 pm2 logs api-gateway
