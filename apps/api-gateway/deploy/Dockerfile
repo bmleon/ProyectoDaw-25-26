@@ -3,7 +3,7 @@ FROM node:20-alpine
 ARG CONTEXT
 ARG MICROSERVICIO
 ARG APP_MS=./apps/${MICROSERVICIO}
-ARG RUTA_BUILD = ./deploy/build_img
+# ARG RUTA_BUILD = ./deploy/build_img
 
 RUN apk update && apk add --no-cache git openssh
 
