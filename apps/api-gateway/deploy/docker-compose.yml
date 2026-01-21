@@ -13,9 +13,9 @@ services:
     ports:
       - "${PORT}:3000"
     env_file:
+      - .env
       - .app.env # específico del microservicio
       # - ../../../deploy/.env # general del monorepo
-      - .env
     volumes:
       - ./logs:/root/logs
       - /home/fabri/.ssh /root/.ssh
