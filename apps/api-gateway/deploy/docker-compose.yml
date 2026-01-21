@@ -7,7 +7,7 @@ services:
       args:
         - CONTEXTO=${CONTEXTO}
         - MICROSERVICIO=${MICROSERVICIO}
-    # image: fabricioparagulla/ukiyo-${MICROSERVICIO}
+    image: fabricio07/ukiyo-${MICROSERVICIO}
     container_name: ukiyo-${MICROSERVICIO}
     # restart: unless-stopped
     ports:
@@ -18,7 +18,7 @@ services:
       - .env
     volumes:
       - ./logs:/root/logs
-      - /home/fabri/.ssh:/root/.ssh
+      - /home/fabri/.ssh /root/.ssh
     environment:
       - NODE_ENV=production
       # Variables para conectar con los ms
