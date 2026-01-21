@@ -3,6 +3,7 @@ set -e
 
 INFORME=/root/logs/informe.log
 config_git(){
+    # config_check_git
     git clone --filter=blob:none --no-checkout $REPO_GIT ukiyo-backend
     cd ukiyo-backend
 
@@ -18,7 +19,21 @@ config_git(){
 
 }
 
+config_check_git(){
+    # ssh -T git@github.com
+    chmod 600 /root/.ssh/id_25519
+    chmod 644 /root/.ssh/id_25519.pub
+    ssh-keyscan github.com >> /root/.ssh/known_hosts
+}
+
 main(){
+
+    echo "Configurando Git"
+    # if ssh -T git@github.com
+        config_git
+    #fi
+
+    echo "Instalando microservicio"
 
     npm install -g npm@11.7.0
     npm install -g pnpm
@@ -40,6 +55,7 @@ main(){
 }
 
 main
+tail -f /dev/null
 
 # Mantener el contenedor vivo mostrando logs
 pm2 logs api-gateway

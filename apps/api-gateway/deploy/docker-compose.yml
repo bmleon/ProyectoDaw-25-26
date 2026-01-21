@@ -1,29 +1,32 @@
 services:
   api-gateway:
     build:
-      context: ../../../
+      context: ${CONTEXTO}
       dockerfile: ./apps/${MICROSERVICIO}/deploy/Dockerfile
-      # dockerfile: ./deploy/Dockerfile
+      # dockerfile: ./deploy/build_img/Dockerfile
       args:
+        - CONTEXTO=${CONTEXTO}
         - MICROSERVICIO=${MICROSERVICIO}
+    # image: fabricioparagulla/ukiyo-${MICROSERVICIO}
     container_name: ukiyo-${MICROSERVICIO}
     # restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "${PORT}:3000"
     env_file:
-      - .env
+      - .app.env # específico del microservicio
+      - ../../../deploy/.env # general del monorepo
     volumes:
       - ./logs:/root/logs
       - /home/fabri/.ssh:/root/.ssh
     environment:
       - NODE_ENV=production
       # Variables para conectar con los ms
-      - USUARIOS_HOST=${USUARIOS_HOST}
-      - USUARIOS_TCP_PORT=${USUARIOS_TCP_PORT}
-      - CLIENTES_HOST=${CLIENTES_HOST}
-      - CLIENTES_TCP_PORT=${CLIENTES_TCP_PORT}
-      - PRODUCTOS_HOST=${PRODUCTOS_HOST}
-      - PRODUCTOS_TCP_PORT=${PRODUCTOS_TCP_PORT}
+      # - USUARIOS_HOST=${USUARIOS_HOST}
+      # - USUARIOS_TCP_PORT=${USUARIOS_TCP_PORT}
+      # - CLIENTES_HOST=${CLIENTES_HOST}
+      # - CLIENTES_TCP_PORT=${CLIENTES_TCP_PORT}
+      # - PRODUCTOS_HOST=${PRODUCTOS_HOST}
+      # - PRODUCTOS_TCP_PORT=${PRODUCTOS_TCP_PORT}
     networks:
       - ukiyo-network
 

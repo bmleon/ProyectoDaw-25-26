@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 interface EnvVars {
-    GATEWAY_PORT: number;
+    PORT: number;
     
     // // Usuarios
     // USUARIOS_TCP_PORT: number;
@@ -27,7 +27,7 @@ interface EnvVars {
 }
 
 const envsSchema = joi.object({
-    GATEWAY_PORT: joi.number().required(),
+    PORT: joi.number().required(),
 
     NATS_SERVERS: joi.array().items(joi.string()).required(),
     
@@ -56,7 +56,7 @@ if (error) {
 const envVars: EnvVars = value;
 
 export const envs = {
-    port: envVars.GATEWAY_PORT,
+    port: envVars.PORT,
     databaseUrl: envVars.DATABASE_URL,
     natsServers: envVars.NATS_SERVERS,
     // usuarios: {
