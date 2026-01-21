@@ -11,6 +11,9 @@ build/
 
 # Entorno y Secretos
 # .env
+*/.app.env
+**/.app.env
+.app.env
 */.env
 **/.env
 .env.production

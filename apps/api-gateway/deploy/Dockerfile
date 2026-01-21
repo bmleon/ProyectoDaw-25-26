@@ -13,7 +13,7 @@ COPY ${APP_MS}/deploy/start.sh .
 RUN chmod +x ./start.sh
 RUN mkdir -p /root/logs
 
-RUN mkdir -p root/.ssh
+# RUN mkdir -p root/.ssh
 # COPY ./deploy/id_25519.pub /root/.ssh/id_25519.pub
 # COPY ./deploy/id_25519 /root/.ssh/id_25519
 
@@ -21,7 +21,7 @@ RUN mkdir -p root/.ssh
 # RUN chmod 600 /root/.ssh/id_25519
 # RUN chmod 644 /root/.ssh/id_25519.pub
 # # Evita fingerprint 
-# RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 RUN chmod 777 /app
 # Exponer puerto
