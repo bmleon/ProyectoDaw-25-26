@@ -21,7 +21,7 @@ RUN mkdir -p /root/logs
 # RUN chmod 600 /root/.ssh/id_25519
 # RUN chmod 644 /root/.ssh/id_25519.pub
 # # Evita fingerprint 
-RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+# RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 RUN chmod 777 /app
 # Exponer puerto
