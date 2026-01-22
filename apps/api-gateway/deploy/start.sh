@@ -4,6 +4,10 @@ set -e
 INFORME=/root/logs/informe.log
 config_git(){
     config_check_git
+    if [$? -ne 0]; then
+        echo "Error de configuracion de git. Abortando." >> $INFORME
+        exit 1
+    fi
     git clone --filter=blob:none --no-checkout $REPO_GIT ukiyo-backend
     cd ukiyo-backend
 
@@ -20,18 +24,18 @@ config_git(){
 }
 
 config_check_git(){
-    # ssh -T git@github.com
     chmod 600 /root/.ssh/id_ed25519
     chmod 644 /root/.ssh/id_ed25519.pub
     ssh-keyscan github.com >> /root/.ssh/known_hosts
+    ssh -T git@github.com
 }
 
 main(){
 
     echo "Configurando Git"
-    if ssh -T git@github.com
+    # if ssh -T git@github.com
         config_git
-    fi
+    # fi
 
     echo "Instalando microservicio"
 
