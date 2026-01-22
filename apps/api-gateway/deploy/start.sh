@@ -29,9 +29,9 @@ config_check_git(){
 main(){
 
     echo "Configurando Git"
-    # if ssh -T git@github.com
+    if ssh -T git@github.com
         config_git
-    #fi
+    fi
 
     echo "Instalando microservicio"
 
