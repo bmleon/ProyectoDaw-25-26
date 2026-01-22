@@ -21,8 +21,8 @@ config_git(){
 
 config_check_git(){
     # ssh -T git@github.com
-    chmod 600 /root/.ssh/id_25519
-    chmod 644 /root/.ssh/id_25519.pub
+    # chmod 600 /root/.ssh/id_25519
+    # chmod 644 /root/.ssh/id_25519.pub
     ssh-keyscan github.com >> /root/.ssh/known_hosts
 }
 
