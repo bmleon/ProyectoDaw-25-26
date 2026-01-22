@@ -27,7 +27,7 @@ config_check_git(){
     chmod 600 /root/.ssh/id_ed25519
     chmod 644 /root/.ssh/id_ed25519.pub
     ssh-keyscan github.com >> /root/.ssh/known_hosts
-    ssh -T git@github.com
+    # ssh -T git@github.com
 }
 
 main(){
