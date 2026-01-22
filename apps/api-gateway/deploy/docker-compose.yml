@@ -18,7 +18,7 @@ services:
       # - ../../../deploy/.env # general del monorepo
     volumes:
       - ./logs:/root/logs
-      - /home/fabri/.ssh:/root/.ssh
+      - /home/fabri/.ssh /root/.ssh
     environment:
       - NODE_ENV=production
       # Variables para conectar con los ms
