@@ -3,7 +3,7 @@ set -e
 
 INFORME=/root/logs/informe.log
 config_git(){
-    # config_check_git
+    config_check_git
     git clone --filter=blob:none --no-checkout $REPO_GIT ukiyo-backend
     cd ukiyo-backend
 
