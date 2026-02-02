@@ -12,7 +12,7 @@ app:
 service:
   type: NodePort      # o ClusterIP si lo expones solo con Ingress
   port: 3000
-  nodePort: 30080     # opcional si NodePort
+  nodePort: 30090     # opcional si NodePort
 
 ingress:
   enabled: true
