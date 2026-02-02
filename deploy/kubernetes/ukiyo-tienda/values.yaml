@@ -15,8 +15,8 @@ infra-nats:
 api-gateway:
   enabled: true
 
-ms-usuarios:
-  enabled: true
+# ms-usuarios:
+#   enabled: true
 
 ms-clientes:
   enabled: true
