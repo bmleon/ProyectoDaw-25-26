@@ -2,7 +2,6 @@
 set -e
 
 INFORME=/root/logs/informe.log
-
 setup_ssh_k8s(){
     echo "Configurando SSH desde volumen temporal..."
     mkdir -p /root/.ssh
