@@ -1,0 +1,25 @@
+global:
+  nats:
+    # Nombre DNS interno del Service de NATS (lo define infra-nats)
+    # url: "nats://nats-1:4222, nats://nats-2:4222"
+    #  En kubernetes se conecta al Service, no a los pods directamente
+    url: "nats://nats:4222"
+  env:
+    REPO_GIT: "git@github.com:Backend-ukiyo/ukiyo-backend.git"
+    PORT: 3000
+  namespace: "ukiyo-tienda"
+
+infra-nats:
+  enabled: true
+
+api-gateway:
+  enabled: true
+
+ms-usuarios:
+  enabled: true
+
+ms-clientes:
+  enabled: true
+
+ms-productos:
+  enabled: true

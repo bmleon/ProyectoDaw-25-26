@@ -1,0 +1,22 @@
+app:
+  image: 
+    repository: fabricio07/ukiyo-api-gateway
+    tag: latest
+    pullPolicy: Always
+  containerPort: 3000
+  container:
+    name: ukiyo-api-gateway
+    Port: 3000
+    replicas: 1
+
+service:
+  type: NodePort      # o ClusterIP si lo expones solo con Ingress
+  port: 3000
+  nodePort: 30080     # opcional si NodePort
+
+ingress:
+  enabled: true
+  className: nginx
+  host: ukiyocazorla.es
+  path: /
+  pathType: Prefix

@@ -2,12 +2,34 @@
 set -e
 
 INFORME=/root/logs/informe.log
+
+setup_ssh_k8s(){
+    echo "Configurando SSH desde volumen temporal..."
+    mkdir -p /root/.ssh
+    
+    # Copiamos del volumen de solo lectura (/tmp/ssh_keys) a la carpeta real (/root/.ssh)
+    if [ -f "/tmp/ssh_keys/id_ed25519" ]; then
+        cp /tmp/ssh_keys/id_ed25519 /root/.ssh/id_ed25519
+        cp /tmp/ssh_keys/id_ed25519.pub /root/.ssh/id_ed25519.pub
+        
+        # Ahora sí podemos cambiar permisos porque son copias nuestras
+        chmod 700 /root/.ssh
+        chmod 600 /root/.ssh/id_ed25519
+        chmod 644 /root/.ssh/id_ed25519.pub
+    fi
+
+    # Generamos known_hosts (ahora sí podemos escribir)
+    ssh-keyscan github.com > /root/.ssh/known_hosts 2>/dev/null
+}
+
 config_git(){
-    config_check_git
     if [$? -ne 0]; then
         echo "Error de configuracion de git. Abortando." >> $INFORME
         exit 1
     fi
+
+    ls -la /root/.ssh
+
     git clone --filter=blob:none --no-checkout $REPO_GIT ukiyo-backend
     cd ukiyo-backend
 
@@ -23,14 +45,9 @@ config_git(){
 
 }
 
-config_check_git(){
-    chmod 600 /root/.ssh/id_ed25519
-    chmod 644 /root/.ssh/id_ed25519.pub
-    ssh-keyscan github.com >> /root/.ssh/known_hosts
-    # ssh -T git@github.com
-}
-
 main(){
+
+    setup_ssh_k8s
 
     echo "Configurando Git"
     # if ssh -T git@github.com
@@ -39,9 +56,7 @@ main(){
 
     echo "Instalando microservicio"
 
-    npm install -g npm@11.7.0
-    npm install -g pnpm
-    npm install -g pm2
+    npm install -g npm@11.7.0 pnpm pm2
 
     echo "Instalando dependencias"
     pnpm install --frozen-lockfile

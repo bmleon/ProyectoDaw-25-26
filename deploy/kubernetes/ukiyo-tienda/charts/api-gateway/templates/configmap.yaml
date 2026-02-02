@@ -1,0 +1,11 @@
+{{- if .Values.enabled }} # global en el proyecto
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: {{ .Values.app.container.name }}-config # local al microservicio
+    namespace: {{ .Release.Namespace }}
+data:
+    NATS_SERVERS: {{ .Values.global.nats.url | quote }}
+    REPO_GIT: {{ .Values.global.env.REPO_GIT | quote }}
+    PORT: {{ .Values.global.env.PORT | quote }}
+{{- end }}
