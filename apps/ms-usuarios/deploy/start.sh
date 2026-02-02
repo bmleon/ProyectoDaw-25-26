@@ -2,6 +2,9 @@
 set -e
 set -x
 
+DB_HOST="ms-usuarios-postgres"
+DB_PORT="5432"
+
 INFORME=/root/logs/informe.log
 setup_ssh_k8s(){
     echo "Configurando SSH desde volumen temporal..."
@@ -17,13 +20,15 @@ setup_ssh_k8s(){
         chmod 644 /root/.ssh/id_ed25519.pub
     fi
 
-    ssh-keyscan github.com > /root/.ssh/known_hosts 2>/dev/null
+    echo "Host github.com" > /root/.ssh/config
+    echo "  StrictHostKeyChecking no" >> /root/.ssh/config
+    chmod 600 /root/.ssh/config
 }
 
 # Función para esperar a que la BD esté lista
 wait_for_db() {
     echo "Esperando a que la Base de Datos ($DB_HOST:$DB_PORT) esté lista..."
-        until nc -z -v -w30 "$DB_HOST" 5432; do
+        until nc -z -v -w30 "$DB_HOST" "$DB_PORT"; do
     echo "Esperando BD"
         sleep 2
         done
