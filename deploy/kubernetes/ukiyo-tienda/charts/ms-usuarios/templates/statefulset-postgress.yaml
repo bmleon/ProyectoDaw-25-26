@@ -2,44 +2,32 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-    name: {{ .Values.app.name }}-postgres
-    namespace: {{ .Release.Namespace }}
+  name: {{ .Values.app.name }}-postgres
+  namespace: {{ .Release.Namespace }}
 spec:
-    serviceName: {{ .Values.app.name }}-postgres
-    replicas: 1
-    selector:
-        matchLabels:
-            app: {{ .Values.app.name }}-postgres
-    template:
-        metadata:
-        labels:
-            app: {{ .Values.app.name }}-postgres
+  serviceName: {{ .Values.app.name }}-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}-postgres
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}-postgres
     spec:
-        containers:
-            - name: postgres
-            image: {{ .Values.postgres.image }}
-            imagePullPolicy: IfNotPresent
-            ports:
-                - containerPort: {{ .Values.postgres.port }}
-            env:
+      containers:
+        - name: postgres
+          image: {{ .Values.postgres.image }}
+          ports:
+            - containerPort: {{ .Values.postgres.port }}
+          env:
             - name: POSTGRES_USER
-            value: {{ .Values.postgres.user }}
+              value: {{ .Values.postgres.user }}
             - name: POSTGRES_DB
-            value: {{ .Values.postgres.db }}
+              value: {{ .Values.postgres.db }}
             - name: POSTGRES_PASSWORD
-            valueFrom:
+              valueFrom:
                 secretKeyRef:
-                    name: {{ .Values.app.name }}-postgres-secret
-                    key: POSTGRES_PASSWORD
-            volumeMounts:
-                - name: data
-                mountPath: /var/lib/postgresql/data
-    volumeClaimTemplates:
-        - metadata:
-            name: data
-        spec:
-            accessModes: ["ReadWriteOnce"]
-            resources:
-                requests:
-                    storage: {{ .Values.postgres.storageSize | quote }}
+                  name: {{ .Values.app.name }}-postgres-secret
+                  key: POSTGRES_PASSWORD
 {{- end }}

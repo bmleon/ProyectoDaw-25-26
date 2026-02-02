@@ -2,14 +2,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-    name: ukiyo-ms-usuarios-config
-    namespace: {{ .Release.Namespace }}
+  name: {{ .Values.app.name }}-config
+  namespace: {{ .Release.Namespace }}
 data:
-    NATS_SERVERS: {{ .Values.global.nats.url| quote }}
-    REPO_GIT: {{ .Values.global.env.REPO_GIT | quote }}
-    PORT: {{ .Values.global.env.PORT | quote }}
-    DATABASE_HOST: {{ .Values.env.DATABASE_HOST | quote }}
-    DATABASE_PORT: {{ .Values.env.DATABASE_PORT | quote }}
-    DATABASE_NAME: {{ .Values.env.DATABASE_NAME | quote }}
-    DATABASE_USER: {{ .Values.env.DATABASE_USER | quote }}
+  PORT: {{ .Values.app.containerPort | quote }}
+  DATABASE_URL: "postgresql://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@{{ .Values.app.name }}-postgres:{{ .Values.postgres.port }}/{{ .Values.postgres.db }}"
+  NATS_SERVERS: {{ .Values.global.nats.url | quote }}
+  REPO_GIT: {{ .Values.global.env.REPO_GIT | quote }}
 {{- end }}

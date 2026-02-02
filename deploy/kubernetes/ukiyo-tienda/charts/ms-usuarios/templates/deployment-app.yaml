@@ -2,34 +2,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: ukiyo-ms-usuarios-deployment
-    namespace: {{ .Release.Namespace }}
+  name: {{ .Values.app.name }}-deployment
+  namespace: {{ .Release.Namespace }}
 spec:
-    replicas: 1
-    selector:
+  replicas: {{ .Values.app.replicas }}
+  selector:
     matchLabels:
-        app: ukiyo-ms-usuarios
-    template:
+      app: {{ .Values.app.name }}
+  template:
     metadata:
-        labels:
-        app: ukiyo-ms-usuarios
-        annotations:
-            checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-            checksum/secret: {{ include (print $.Template.BasePath "/secret-postgres.yaml") . | sha256sum }}
+      labels:
+        app: {{ .Values.app.name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
-        containers:
-        - name: ukiyo-ms-usuarios
-            image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
-            imagePullPolicy: {{ .Values.app.image.pullPolicy }}
-            ports:
-                - containerPort: {{ .Values.app.containerPort }}
-            envFrom:
-                - configMapRef:
-                name: ukiyo-ms-usuarios-config
-            env:
-                - name: DATABASE_PASSWORD
-                valueFrom:
-                    secretKeyRef:
-                    name: ukiyo-ms-usuarios-postgres-secret
-                    key: POSTGRES_PASSWORD
+      containers:
+        - name: {{ .Values.app.name }}
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          imagePullPolicy: "{{ .Values.app.image.pullPolicy }}"
+          ports:
+            - containerPort: {{ .Values.app.containerPort }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.app.name }}-config
+          volumeMounts:
+            - name: ssh-keys-vol
+              mountPath: "/tmp/ssh_keys"
+              readOnly: true
+
+      volumes:
+        - name: ssh-keys-vol
+          secret:
+            secretName: ssh-key-secret
+            defaultMode: 0400
 {{- end }}
