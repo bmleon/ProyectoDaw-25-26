@@ -15,11 +15,11 @@ infra-nats:
 api-gateway:
   enabled: true
 
-# ms-usuarios:
-#   enabled: true
+ms-usuarios:
+  enabled: false
 
 ms-clientes:
-  enabled: true
+  enabled: false
 
 ms-productos:
-  enabled: true
+  enabled: false
