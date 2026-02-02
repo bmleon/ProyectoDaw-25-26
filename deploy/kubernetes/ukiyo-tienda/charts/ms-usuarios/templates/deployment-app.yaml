@@ -25,6 +25,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Values.app.name }}-config
+            - secretRef:
+                name: {{ .Values.app.name }}-postgres-secret
           volumeMounts:
             - name: ssh-keys-vol
               mountPath: "/tmp/ssh_keys"

@@ -8,9 +8,12 @@ app:
   replicas: 1
 
 postgres:
-  image: postgres:15-alpine
-  user: postgres
-  password: password_segura_123
-  db: ukiyo_users
-  port: 5432
-  storageSize: 1Gi
+    image: postgres:15-alpine
+    user: user_usuarios
+    password: password_usuarios
+    db: bd_usuarios
+    port: 5432
+    storageSize: 1Gi
+
+env:
+  jwtSecret: 88dd961b931da785b8f619e891a4bd4f
