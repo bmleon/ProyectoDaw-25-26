@@ -2,39 +2,35 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-    name: ms-usuarios-postgres
+    name: {{ .Values.app.name }}-postgres
     namespace: {{ .Release.Namespace }}
 spec:
-    serviceName: ms-usuarios-postgres
+    serviceName: {{ .Values.app.name }}-postgres
     replicas: 1
     selector:
         matchLabels:
-            app: ms-usuarios-postgres
-            app.kubernetes.io/component: postgres
-            app.kubernetes.io/instance: {{ .Release.Name }}
+            app: {{ .Values.app.name }}-postgres
     template:
         metadata:
-            labels:
-                app.kubernetes.io/component: postgres
-                app.kubernetes.io/instance: {{ .Release.Name }}
-                app: ms-usuarios-postgres
-        spec:
-            containers:
-                - name: postgres
-                image: {{ .Values.postgres.image }}
-                imagePullPolicy: IfNotPresent
+        labels:
+            app: {{ .Values.app.name }}-postgres
+    spec:
+        containers:
+            - name: postgres
+            image: {{ .Values.postgres.image }}
+            imagePullPolicy: IfNotPresent
             ports:
                 - containerPort: {{ .Values.postgres.port }}
             env:
-                - name: POSTGRES_DB
-                value: {{ .Values.postgres.auth.database | quote }}
-                - name: POSTGRES_USER
-                value: {{ .Values.postgres.auth.username | quote }}
-                - name: POSTGRES_PASSWORD
-                valueFrom:
-                    secretKeyRef:
-                        name: ukiyo-ms-usuarios-postgres-secret
-                        key: POSTGRES_PASSWORD
+            - name: POSTGRES_USER
+            value: {{ .Values.postgres.user }}
+            - name: POSTGRES_DB
+            value: {{ .Values.postgres.db }}
+            - name: POSTGRES_PASSWORD
+            valueFrom:
+                secretKeyRef:
+                    name: {{ .Values.app.name }}-postgres-secret
+                    key: POSTGRES_PASSWORD
             volumeMounts:
                 - name: data
                 mountPath: /var/lib/postgresql/data
