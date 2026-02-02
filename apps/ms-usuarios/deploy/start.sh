@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 INFORME=/root/logs/informe.log
 setup_ssh_k8s(){
