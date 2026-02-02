@@ -1,0 +1,52 @@
+{{- if .Values.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    name: ms-usuarios-postgres
+    namespace: {{ .Release.Namespace }}
+spec:
+    serviceName: ms-usuarios-postgres
+    replicas: 1
+    selector:
+        matchLabels:
+            app: ms-usuarios-postgres
+            app.kubernetes.io/component: postgres
+            app.kubernetes.io/instance: {{ .Release.Name }}
+    template:
+        metadata:
+            labels:
+                app.kubernetes.io/component: postgres
+                app.kubernetes.io/instance: {{ .Release.Name }}
+                app: ms-usuarios-postgres
+        spec:
+            containers:
+                - name: postgres
+                image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+                imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
+            ports:
+                - containerPort: 5432
+            env:
+                - name: POSTGRES_DB
+                value: {{ .Values.postgres.auth.database | quote }}
+                - name: POSTGRES_USER
+                value: {{ .Values.postgres.auth.username | quote }}
+                - name: POSTGRES_PASSWORD
+                valueFrom:
+                    secretKeyRef:
+                        name: ukiyo-ms-usuarios-postgres-secret
+                        key: POSTGRES_PASSWORD
+            volumeMounts:
+                - name: data
+                mountPath: /var/lib/postgresql/data
+    volumeClaimTemplates:
+        - metadata:
+            name: data
+        spec:
+            accessModes: ["ReadWriteOnce"]
+            {{- if .Values.postgres.persistence.storageClassName }}
+            storageClassName: {{ .Values.postgres.persistence.storageClassName | quote }}
+            {{- end }}
+            resources:
+                requests:
+                    storage: {{ .Values.postgres.persistence.size | quote }}
+{{- end }}

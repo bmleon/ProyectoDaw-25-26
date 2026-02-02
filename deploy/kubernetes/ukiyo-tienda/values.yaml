@@ -16,7 +16,7 @@ api-gateway:
   enabled: true
 
 ms-usuarios:
-  enabled: false
+  enabled: true
 
 ms-clientes:
   enabled: false

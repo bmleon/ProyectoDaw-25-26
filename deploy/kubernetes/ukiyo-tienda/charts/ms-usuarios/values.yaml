@@ -1,0 +1,16 @@
+app:
+  name: ms-usuarios
+  containerPort: 3000
+  image:
+    repository: fabricio07/ukiyo-ms-usuarios
+    tag: latest
+    pullPolicy: Always
+  replicas: 1
+
+postgres:
+  image: postgres:15-alpine
+  user: postgres
+  password: password_segura_123
+  db: ukiyo_users
+  port: 5432
+  storageSize: 1Gi

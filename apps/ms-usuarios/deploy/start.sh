@@ -1,6 +1,25 @@
 #!/bin/bash
 set -e
 
+INFORME=/root/logs/informe.log
+
+setup_ssh_k8s(){
+    echo "Configurando SSH desde volumen temporal..."
+    mkdir -p /root/.ssh
+    
+    if [ -f "/tmp/ssh_keys/id_ed25519" ]; then
+        cp /tmp/ssh_keys/id_ed25519 /root/.ssh/id_ed25519
+        cp /tmp/ssh_keys/id_ed25519.pub /root/.ssh/id_ed25519.pub
+        
+        # Permisos estrictos necesarios para SSH
+        chmod 700 /root/.ssh
+        chmod 600 /root/.ssh/id_ed25519
+        chmod 644 /root/.ssh/id_ed25519.pub
+    fi
+
+    ssh-keyscan github.com > /root/.ssh/known_hosts 2>/dev/null
+}
+
 # Función para esperar a que la BD esté lista
 wait_for_db() {
     echo "Esperando a que la Base de Datos ($DB_HOST:$DB_PORT) esté lista..."
@@ -11,7 +30,29 @@ wait_for_db() {
     echo "Base de datos conectada."
 }
 
+config_git(){
+    echo "Clonando repositorio..."
+    # Usamos la variable de entorno REPO_GIT que viene del ConfigMap
+    git clone --filter=blob:none --no-checkout $REPO_GIT ukiyo-backend
+    cd ukiyo-backend
+
+    # Sparse checkout para bajar solo lo necesario
+    git sparse-checkout init --cone
+    
+    # IMPORTANTE: Aquí indicamos la carpeta específica de ESTE microservicio
+    git sparse-checkout set apps/${MICROSERVICIO} libs
+    
+    git checkout main
+    git pull origin main
+}
+
 main(){
+
+    setup_ssh_k8s
+
+    echo "Configurando Git"
+    config_git
+
     echo "Iniciando configuración automática"
 
     npm install -g npm@11.7.0
