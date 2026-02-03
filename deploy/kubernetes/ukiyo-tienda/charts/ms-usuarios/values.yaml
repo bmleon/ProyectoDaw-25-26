@@ -1,5 +1,5 @@
 app:
-  name: ms-usuarios
+  name: ukiyo-ms-usuarios
   containerPort: 3000
   image:
     repository: fabricio07/ukiyo-ms-usuarios
@@ -14,6 +14,9 @@ postgres:
     db: bd_usuarios
     port: 5432
     storageSize: 1Gi
+    service:
+      type: NodePort
+      nodePort: 30432
 
 env:
   jwtSecret: 88dd961b931da785b8f619e891a4bd4f
