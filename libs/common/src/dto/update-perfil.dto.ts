@@ -3,6 +3,6 @@ import { CreatePerfilDto } from './create-perfil.dto';
 
 export class UpdatePerfilDto extends PartialType(CreatePerfilDto) {
 
-    id: string;
+    id: number;
 
 }

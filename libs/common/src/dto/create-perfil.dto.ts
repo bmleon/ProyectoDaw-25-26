@@ -1,8 +1,9 @@
-import { IsString, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsOptional, IsNotEmpty } from 'class-validator';
 
 export class CreatePerfilDto {
-  @IsNumber()
-  userId: number; // Necesitamos saber a quién pertenece
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
 
   @IsString()
   nombre: string;
