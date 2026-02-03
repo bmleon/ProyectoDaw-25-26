@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma-client/ms-usuarios';
+import { PrismaClient } from '@prisma/client';
 import { CreatePerfilDto, UpdatePerfilDto } from '@ukiyo/common';
 
 @Injectable()
