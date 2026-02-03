@@ -4,10 +4,9 @@ RUN apk add --no-cache git openssh-client bash netcat-openbsd
 
 WORKDIR /app
 
-COPY . .
+COPY . .  
 
 RUN npm install
-
 RUN npm install @prisma/client
 
 RUN npx prisma generate --schema=apps/ms-usuarios/prisma/schema.prisma

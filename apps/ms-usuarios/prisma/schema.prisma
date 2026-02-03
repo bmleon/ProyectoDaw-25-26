@@ -37,18 +37,24 @@ model Perfil {
   // Clave foránea a Usuario (1 a 1)
   userId    String  @unique 
   user      Usuario @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("Perfil")
+
 }
 
 model Empleado {
-  id               Int      @id @default(autoincrement())
-  puesto           String
-  salario          Float
-  fechaContratacion DateTime @default(now())
-  departamento     String?
+  id                Int       @id @default(autoincrement())
+  userId            String    @unique 
+  usuario           Usuario   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  puesto            String
+  salario           Float     
+  departamento      String?
+  fechaContratacion DateTime? @default(now())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  // Clave foránea a Usuario (1 a 1)
-  userId           String    @unique
-  user             Usuario    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("Empleado")
+
 }
 
 model Acceso {

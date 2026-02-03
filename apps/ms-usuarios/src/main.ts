@@ -21,11 +21,14 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+      transform: true,
       exceptionFactory: (errors) => {
         const messages = errors.map((error) => {
           return `${error.property} - ${Object.values(error.constraints).join(', ')}`;
         });
         
+        console.error('ERROR DE VALIDACIÓN DETECTADO:', JSON.stringify(messages, null, 2));
+
         return new RpcException({
           message: messages,
           statusCode: 400,
