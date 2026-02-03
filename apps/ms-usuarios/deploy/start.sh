@@ -2,7 +2,7 @@
 set -e
 set -x
 
-DB_HOST="ms-usuarios-postgres"
+DB_HOST="ukiyo-ms-usuarios-postgres"
 DB_PORT="5432"
 
 INFORME=/root/logs/informe.log
