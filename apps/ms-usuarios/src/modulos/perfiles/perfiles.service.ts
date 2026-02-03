@@ -1,19 +1,16 @@
 import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { CreatePerfilDto, UpdatePerfilDto } from '@ukiyo/common';
 
 @Injectable()
-export class PerfilesService extends PrismaClient implements OnModuleInit {
-    private readonly logger = new Logger('PerfilesService');
+    export class PerfilesService {
+        private readonly logger = new Logger('PerfilesService');
 
-    async onModuleInit() {
-        await this.$connect();
-    }
+constructor(private readonly prisma: PrismaService) {}
 
-    // 1. Crear Perfil
     async create(createPerfilDto: CreatePerfilDto) {
         try {
-        return await this.perfil.create({
+        return await this.prisma.perfil.create({
             data: createPerfilDto,
         });
         } catch (error) {
@@ -22,52 +19,41 @@ export class PerfilesService extends PrismaClient implements OnModuleInit {
         }
     }
 
-    // 2. Buscar Todos
     async findAll() {
-        return this.perfil.findMany({
-        include: { user: true }
-        });
+        return this.prisma.perfil.findMany();
     }
 
-    // 3. Buscar por ID de Usuario
     async findByUserId(userId: string) {
-        const perfil = await this.perfil.findUnique({
-        where: { userId: userId }, 
+        const perfil = await this.prisma.perfil.findUnique({
+        where: { userId: userId },
         });
 
         if (!perfil) {
         throw new NotFoundException(`Perfil para el usuario ${userId} no encontrado`);
         }
-
         return perfil;
     }
 
-    // 4. Actualizar
     async update(id: string, updatePerfilDto: UpdatePerfilDto) {
         const idNumero = Number(id);
+        
         const { userId, ...dataToUpdate } = updatePerfilDto;
+        const exists = await this.prisma.perfil.findUnique({ where: { id: idNumero } });
+        if (!exists) throw new NotFoundException(`Perfil ${id} no encontrado`);
 
-        const exists = await this.perfil.findUnique({ where: { id: idNumero } });
-        if (!exists) {
-            throw new NotFoundException(`Perfil con ID ${id} no encontrado`);
-        }
-
-        return this.perfil.update({
+        return this.prisma.perfil.update({
         where: { id: idNumero },
         data: dataToUpdate,
         });
     }
 
-    // 5. Borrar
     async remove(id: string) {
         const idNumero = Number(id);
 
-        const exists = await this.perfil.findUnique({ where: { id: idNumero } });
-        if (!exists) {
-            throw new NotFoundException(`Perfil con ID ${id} no encontrado`);
-        }
+        const exists = await this.prisma.perfil.findUnique({ where: { id: idNumero } });
+        if (!exists) throw new NotFoundException(`Perfil ${id} no encontrado`);
 
-        return this.perfil.delete({
+        return this.prisma.perfil.delete({
         where: { id: idNumero },
         });
     }
