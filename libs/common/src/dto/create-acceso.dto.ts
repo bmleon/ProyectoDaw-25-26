@@ -1,12 +1,14 @@
-import { IsString, IsNotEmpty, IsUUID, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsUUID, IsIP } from 'class-validator';
 
 export class CreateAccesoDto {
     @IsUUID()
+    @IsString()
     @IsNotEmpty()
     userId: string;
 
     @IsString()
     @IsNotEmpty()
+    @IsIP()
     ipOrigen: string;
 
     @IsString()

@@ -7,13 +7,18 @@ import { CreateAccesoDto } from '@ukiyo/common';
 export class AccesosController {
   constructor(private readonly accesosService: AccesosService) {}
 
-  @MessagePattern('create_acceso')
+  @MessagePattern({ cmd: 'create_acceso' })
   create(@Payload() createAccesoDto: CreateAccesoDto) {
     return this.accesosService.create(createAccesoDto);
   }
 
-  @MessagePattern('find_accesos_by_user')
-  findAllByUser(@Payload() id: string) {
-    return this.accesosService.findAllByUser(id);
+  @MessagePattern({ cmd: 'find_all_accesos' })
+  findAll() {
+    return this.accesosService.findAll();
+  }
+
+  @MessagePattern({ cmd: 'find_one_acceso' })
+  findOne(@Payload() payload: { id: number }) {
+    return this.accesosService.findOne(payload.id);
   }
 }
