@@ -2,13 +2,16 @@
 // npm install --save-dev prisma dotenv
 // import "dotenv/config";
 
-export default ({
+export default {
   schema: "prisma/schema.prisma", 
+
   migrations: {
     seed: 'npx ts-node apps/ms-usuarios/prisma/seed.ts',
     path: "prisma/migrations", 
   },
+
   datasource: {
+    provider: 'postgresql',
     url: process.env.DATABASE_URL,
   },
-});
+};
