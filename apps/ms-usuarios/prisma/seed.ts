@@ -3,14 +3,14 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('🌱 Iniciando el Seed...');
+    console.log('Iniciando el Seed...');
 
     // 1. LIMPIEZA
     await prisma.acceso.deleteMany();
     await prisma.empleado.deleteMany();
     await prisma.usuario.deleteMany();
     
-    console.log('🗑️  Base de datos limpiada.');
+    console.log('Base de datos limpiada.');
 
   // 2. CREAR USUARIOS
     const admin = await prisma.usuario.create({
