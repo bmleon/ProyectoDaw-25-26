@@ -1,5 +1,4 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { CreateAccesoDto } from '@ukiyo/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 
