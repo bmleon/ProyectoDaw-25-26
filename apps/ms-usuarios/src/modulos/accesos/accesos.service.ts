@@ -1,39 +1,37 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { CreateAccesoDto } from '@ukiyo/common';
+import { PrismaService } from '../../../prisma/prisma.service';
 
 @Injectable()
-export class AccesosService extends PrismaClient implements OnModuleInit {
-  private readonly logger = new Logger('AccesosService');
+export class AccesosService {
+    private readonly logger = new Logger('AccesosService');
 
-  async onModuleInit() {
-    await this.$connect();
-    this.logger.log('Conectado a la BD para Accesos');
-  }
+    constructor(private readonly prisma: PrismaService) {}
 
-  create(createAccesoDto: CreateAccesoDto) {
-    return this.acceso.create({
-      data: createAccesoDto,
-    });
-  }
+    create(createAccesoDto: CreateAccesoDto) {
+      return this.prisma.acceso.create({
+        data: createAccesoDto,
+      });
+    }
 
-  findAll() {
-    return this.acceso.findMany({
-      include: {
-        user: {
-          select: { email: true, username: true } 
+    findAll() {
+      return this.prisma.acceso.findMany({
+        include: {
+          user: {
+            select: { email: true, username: true }
+          }
+        },
+        orderBy: {
+          fechaHora: 'desc'
         }
-      },
-      orderBy: {
-        fechaHora: 'desc'
-      }
-    });
-  }
+      });
+    }
 
-  findOne(id: number) {
-    return this.acceso.findUnique({
-      where: { id },
-      include: { user: true },
-    });
-  }
+    findOne(id: number) {
+      return this.prisma.acceso.findUnique({
+        where: { id },
+        include: { user: true },
+      });
+    }
 }
