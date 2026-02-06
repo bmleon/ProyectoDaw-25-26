@@ -16,48 +16,67 @@ async function main() {
     
     console.log('Base de datos limpiada.');
 
-  // 2. CREAR USUARIOS
+    // 2. CREAR ROLES
+    const rolAdmin = await prisma.rol.upsert({
+        where: { name: 'ADMIN' },
+        update: {},
+        create: { name: 'ADMIN' },
+    });
+
+    const rolUser = await prisma.rol.upsert({
+        where: { name: 'USER' },
+        update: {},
+        create: { name: 'USER' },
+    });
+
+    console.log('Roles maestros asegurados.');
+
+    // 3. CREAR USUARIOS
     const admin = await prisma.usuario.create({
-        data: {
-            username: 'fabricio_admin',
-            email: 'fabricio@ukiyo.com',
-            password: '$2b$10$EpIXA/w....',
-            roles: ['admin', 'super-user'],
+    data: {
+        username: 'fabricio_admin',
+        email: 'fabricio@ukiyo.com',
+        password: '$2b$10$EpIXA/w....',
+        roles: {
+            connect: { id: rolAdmin.id } 
+        },
         },
     });
 
     const empleadoNormal = await prisma.usuario.create({
         data: {
-            username: 'belen_dev',
-            email: 'belen@ukiyo.com',
-            password: '$2b$10$EpIXA/w....',
-            roles: ['user'],
+        username: 'belen_dev',
+        email: 'belen@ukiyo.com',
+        password: '$2b$10$EpIXA/w...',
+        roles: {
+            connect: { id: rolUser.id }
+        },
         },
     });
 
     console.log('Usuarios creados.');
 
-    // 3. CREAR EMPLEADOS
+    // 4. CREAR EMPLEADOS
     await prisma.empleado.create({
         data: {
-            userId: admin.id, // Conectamos con el ID generado arriba
-            puesto: 'Tech Lead & Architect',
-            salario: 5500.50,
-            departamento: 'Ingeniería',
+        userId: admin.id,
+        puesto: 'Tech Lead',
+        salario: 5500.50,
+        departamento: 'Ingeniería',
         },
     });
 
     await prisma.empleado.create({
         data: {
-            userId: empleadoNormal.id,
-            puesto: 'Junior Developer',
-            salario: 1200.00,
-            departamento: 'Desarrollo',
+        userId: empleadoNormal.id,
+        puesto: 'Junior Dev',
+        salario: 1200.00,
+        departamento: 'Desarrollo',
         },
     });
     console.log('Perfiles de empleado creados.');
 
-    // 4. CREAR ACCESOS
+    // 5. CREAR ACCESOS
     await prisma.acceso.createMany({
         data: [
         {

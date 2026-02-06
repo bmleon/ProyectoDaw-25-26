@@ -19,23 +19,41 @@ export class UsuariosService implements OnModuleInit {
   }
 
   async create(createDto: CreateUsuarioDto) {
-    this.logger.log(`Creando usuario: ${createDto.username}`);
+  this.logger.log(`Creando usuario: ${createDto.username}`);
 
-    try {
-      const { password, ...userData } = createDto;
-      
-      const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const { password, roles, ...userData } = createDto;
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-      return await this.prisma.usuario.create({
-        data: {
-          username: createDto.username,
-          email:    createDto.email,
-          password: hashedPassword,
-          roles:    ['USER'],
-          isActive: true,
+    const rolesToConnect = (roles && roles.length > 0)
+      ? roles.map(rol => ({ name: rol.trim().toUpperCase() }))
+      : [{ name: 'USER' }];
+
+    return await this.prisma.usuario.create({
+      data: {
+        username: createDto.username,
+        email:    createDto.email,
+        password: hashedPassword,
+        isActive: true,
+        
+        // CONEXIÓN A TABLA ROL
+        roles: {
+          connect: rolesToConnect
         },
-      });
-    } catch (error) {
+      },
+      include: {
+        roles: {
+          select: { name: true }
+        }
+      }
+    });
+  } catch (error) {
+      if (error.code === 'P2025') {
+        throw new RpcException({
+          status: 400,
+          message: `Error: Uno de los roles no existe en el sistema.`
+        });
+      }
       throw new RpcException(error);
     }
   }

@@ -13,7 +13,7 @@ model Usuario {
   username  String   @unique
   email     String   @unique
   password  String
-  roles     String[] @default(["USER"]) // Ojo: Array de strings para roles simples
+  roles     Rol[]
   isActive  Boolean  @default(true)
   
   // Relaciones
@@ -27,6 +27,13 @@ model Usuario {
   @@map("Usuario")
 }
 
+model Rol {
+  id    Int       @id @default(autoincrement())
+  name  String    @unique
+  
+  // Relación inversa (Prisma crea la tabla intermedia solo)
+  users Usuario[]
+}
 model Perfil {
   id        Int     @id @default(autoincrement())
   nombre    String
