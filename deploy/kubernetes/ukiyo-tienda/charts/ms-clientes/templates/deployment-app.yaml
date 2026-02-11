@@ -33,6 +33,6 @@ spec:
       volumes:
         - name: ssh-keys-vol
           secret:
-            secretName: ssh-keys-secret
+            secretName: ssh-key-secret
             defaultMode: 0400
 {{- end }}
