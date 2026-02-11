@@ -19,7 +19,7 @@ ms-usuarios:
   enabled: true
 
 ms-clientes:
-  enabled: false
+  enabled: true
 
 ms-productos:
   enabled: false

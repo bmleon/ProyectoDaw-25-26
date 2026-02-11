@@ -1,28 +1,12 @@
 FROM node:20-alpine
 
-ARG CONTEXTO
-ARG MICROSERVICIO
-ARG APP_MS=./apps/${MICROSERVICIO}
+RUN apk add --no-cache git openssh-client bash netcat-openbsd
 
 WORKDIR /app
 
-RUN apk add --no-cache openssl bash
+COPY . .  
 
-COPY ${APP_MS}/deploy/start.sh .
-
-COPY package.json .
-COPY pnpm-lock.yaml .
-COPY pnpm-workspace.yaml .
-COPY .npmrc .
-COPY tsconfig.json .
-COPY nest-cli.json .
-
-COPY libs ./libs
-COPY apps/${MICROSERVICIO} ./apps/${MICROSERVICIO}
-
+RUN cp apps/ms-clientes/deploy/start.sh ./start.sh
 RUN sed -i 's/\r$//' ./start.sh && chmod +x ./start.sh
-
-EXPOSE 3000
-USER root
 
 CMD ["./start.sh"]
