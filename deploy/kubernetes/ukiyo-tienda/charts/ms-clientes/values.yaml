@@ -1,7 +1,7 @@
 enabled: true
 
 app:
-  name: ms-clientes
+  name: ukiyo-ms-clientes
   replicas: 1
   containerPort: 3002
   image:
