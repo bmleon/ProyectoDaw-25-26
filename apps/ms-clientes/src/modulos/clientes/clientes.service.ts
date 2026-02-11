@@ -22,7 +22,7 @@ export class ClientesService implements OnModuleInit {
             data: createDto,
         });
         } catch (error) {
-        throw new RpcException(error);
+        throw new RpcException(error instanceof Error ? error.message : String(error));
         }
     }
 
@@ -35,7 +35,7 @@ export class ClientesService implements OnModuleInit {
         where: { id },
         });
         if (!cliente) {
-        throw new NotFoundException(`Cliente ${id} no encontrado`);
+            throw new RpcException({ status: 404, message: `Cliente ${id} no encontrado` });
         }
         return cliente;
     }
