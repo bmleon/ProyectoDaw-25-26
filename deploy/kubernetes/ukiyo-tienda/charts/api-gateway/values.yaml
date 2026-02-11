@@ -10,9 +10,9 @@ app:
     replicas: 1
 
 service:
-  type: NodePort      # o ClusterIP si lo expones solo con Ingress
-  port: 3000
-  nodePort: 30090     # opcional si NodePort
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
 
 ingress:
   enabled: true
