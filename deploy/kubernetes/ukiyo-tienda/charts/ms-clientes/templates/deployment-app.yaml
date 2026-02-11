@@ -25,11 +25,10 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Values.app.name }}-config
-      volumeMounts:
-        - name: ssh-keys-vol
-          mountPath: "/tmp/ssh_keys"
-          readOnly: true
-
+          volumeMounts:
+            - name: ssh-keys-vol
+              mountPath: "/tmp/ssh_keys"
+              readOnly: true
       volumes:
         - name: ssh-keys-vol
           secret:
