@@ -4,14 +4,10 @@ export class CreateClienteDto {
 
     @IsString()
     @IsNotEmpty()
-    id: string;
-
-    @IsString()
-    @IsNotEmpty()
-    nombre: string;
+    nombre!: string;
 
     @IsEmail()
-    email: string;
+    email!: string;
 
     @IsString()
     @IsOptional()
