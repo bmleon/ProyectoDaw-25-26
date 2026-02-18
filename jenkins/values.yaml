@@ -20,6 +20,11 @@ controller:
     enabled: true
     className: nginx
     host: jenkins.ukiyocazorla.es
+  initContainerEnv:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-Djava.net.preferIPv4Stack=true"
+    - name: JENKINS_UC_DOWNLOAD
+      value: "https://get.jenkins.io/plugins"
   env:
     - name: JAVA_TOOL_OPTIONS
       value: "-Djava.net.preferIPv4Stack=true"

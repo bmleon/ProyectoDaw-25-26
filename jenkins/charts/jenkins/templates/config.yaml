@@ -13,6 +13,7 @@ metadata:
 data:
   apply_config.sh: |-
     set -e
+    export JAVA_TOOL_OPTIONS="-Djava.net.preferIPv4Stack=true"
 {{- if .Values.controller.initializeOnce }}
     if [ -f {{ .Values.controller.jenkinsHome }}/initialization-completed ]; then
       echo "controller was previously initialized, refusing to re-initialize"
