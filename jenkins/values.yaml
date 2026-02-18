@@ -21,6 +21,8 @@ controller:
     className: nginx
     host: jenkins.ukiyocazorla.es
   env:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-Djava.net.preferIPv4Stack=true"
     - name: JENKINS_UC_DOWNLOAD
       value: "https://get.jenkins.io/plugins"
     - name: JENKINS_UC_DOWNLOAD_URL
