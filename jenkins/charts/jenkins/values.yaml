@@ -566,7 +566,7 @@ controller:
         # -- Repository of the image that triggers the reload
         repository: kiwigrid/k8s-sidecar
         # -- Tag for the image that triggers the reload
-        tag: "lts-jdk21"
+        tag: "1.24.4"
         urlJenkins: "http://jenkins.ukiyocazorla.es"
       imagePullPolicy: IfNotPresent
       resources: {}
