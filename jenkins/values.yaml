@@ -14,8 +14,10 @@ controller:
     configAutoReload:
       enabled: true
       image:
-        repository: kiwigrid/k8s-sidecar
-        tag: "1.24.4"
+        repository: jenkins/jenkins
+        tag: "lts-jdk21"
+        pullPolicy: Always
+  jenkinsUrl: "http://jenkins.ukiyocazorla.es"
   ingress:
     enabled: true
     className: nginx
