@@ -171,7 +171,7 @@ controller:
   jenkinsUrlProtocol:
 
   # -- Set Jenkins URL if you are not using the ingress definitions provided by the chart
-  jenkinsUrl:
+  jenkinsUrl: http://jenkins.ukiyocazorla.es
 
   # If you set this prefix and use ingress controller, then you might want to set the ingress path below
   # I.e., "/jenkins"
@@ -568,7 +568,8 @@ controller:
         # -- Repository of the image that triggers the reload
         repository: kiwigrid/k8s-sidecar
         # -- Tag for the image that triggers the reload
-        tag: 1.29.1
+        tag: "lts-jdk21"
+        urlJenkins: "http://jenkins.ukiyocazorla.es"
       imagePullPolicy: IfNotPresent
       resources: {}
         #   limits:
@@ -926,7 +927,7 @@ agent:
 
   # For connecting to the Jenkins controller
   # -- Overrides the Kubernetes Jenkins URL
-  jenkinsUrl:
+  jenkinsUrl: "http://jenkins.ukiyocazorla.es"
 
   # connects to the specified host and port, instead of connecting directly to the Jenkins controller
   # -- Overrides the Kubernetes Jenkins tunnel
@@ -947,6 +948,7 @@ agent:
   waitForPodSec: 600
   # -- Namespace in which the Kubernetes agents should be launched
   namespace:
+
   # -- Custom Pod labels (an object with `label-key: label-value` pairs)
   podLabels: {}
   # -- Custom registry used to pull the agent jnlp image from
@@ -955,7 +957,7 @@ agent:
     # -- Repository to pull the agent jnlp image from
     repository: "jenkins/inbound-agent"
     # -- Tag of the image to pull
-    tag: "3283.v92c105e0f819-7"
+    tag: "lts-jdk21"
   # -- Configure working directory for default agent
   workingDir: "/home/jenkins/agent"
   nodeUsageMode: "NORMAL"
