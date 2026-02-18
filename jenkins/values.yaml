@@ -20,6 +20,11 @@ controller:
     enabled: true
     className: nginx
     host: jenkins.ukiyocazorla.es
+  env:
+    - name: JENKINS_UC_DOWNLOAD
+      value: "https://get.jenkins.io/plugins"
+    - name: JENKINS_UC_DOWNLOAD_URL
+      value: "https://get.jenkins.io/plugins"
   additionalPlugins: []
   installPlugins:
     - kubernetes
@@ -34,7 +39,7 @@ controller:
     - configuration-as-code
   installLatestPlugins: true
   installLatestSpecifiedPlugins: true
-  javaOpts: "-Djenkins.install.runSetupWizard=false"
+  javaOpts: "-Djava.net.preferIPv4Stack=true"
 agent:
   enabled: true
   runAsUser: 0
