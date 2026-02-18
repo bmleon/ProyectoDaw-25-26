@@ -927,7 +927,7 @@ agent:
 
   # For connecting to the Jenkins controller
   # -- Overrides the Kubernetes Jenkins URL
-  jenkinsUrl: "http://jenkins.ukiyocazorla.es"
+  jenkinsUrl:
 
   # connects to the specified host and port, instead of connecting directly to the Jenkins controller
   # -- Overrides the Kubernetes Jenkins tunnel
