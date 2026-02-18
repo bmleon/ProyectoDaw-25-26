@@ -42,8 +42,6 @@ controller:
     # -- Controller image tag override; i.e., tag: "2.440.1-jdk17"
     tag: "lts-jdk21"
 
-    # -- Controller image tag label
-    tagLabel: jdk17
     # -- Controller image pull policy
     pullPolicy: "Always"
   # -- Controller image pull secret
