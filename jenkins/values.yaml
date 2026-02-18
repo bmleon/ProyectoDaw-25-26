@@ -31,6 +31,7 @@ controller:
     - timestamper
     - pipeline-stage-view
     - ws-cleanup
+    - configuration-as-code:1963.v24e046127a_3f
   javaOpts: "-Djenkins.install.runSetupWizard=false"
 agent:
   enabled: true
