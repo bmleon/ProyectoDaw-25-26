@@ -10,6 +10,19 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:4200',
+      'http://localhost:5173',
+      'https://ukiyocazorla.es',
+      'http://ukiyocazorla.es',
+      'http://38.242.240.106',
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
