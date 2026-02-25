@@ -32,7 +32,7 @@ renderHelmLabels: true
 controller:
   # -- Used for label app.kubernetes.io/component
   componentName: "jenkins-controller"
-  jenkinsUrl: "http://jenkins.ukiyocazorla.es"
+  jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
   image:
     # -- Controller image registry
     registry: "docker.io"
@@ -567,7 +567,7 @@ controller:
         repository: kiwigrid/k8s-sidecar
         # -- Tag for the image that triggers the reload
         tag: "1.24.4"
-        urlJenkins: "http://jenkins.ukiyocazorla.es"
+        urlJenkins: "http://jenkins-bmleon.ukiyocazorla.es"
       imagePullPolicy: IfNotPresent
       resources: {}
         #   limits:
@@ -714,7 +714,7 @@ controller:
       # kubernetes.io/tls-acme: "true"
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    ingressClassName: public
+    ingressClassName: nginx
 
     # Set this path to jenkinsUriPrefix above or use annotations to rewrite path
     # -- Ingress path
@@ -722,7 +722,7 @@ controller:
 
     # configures the hostname e.g. jenkins.example.com
     # -- Ingress hostname
-    hostName: "jenkins.ukiyocazorla.es"
+    hostName: "jenkins-bmleon.ukiyocazorla.es"
     # -- Hostname to serve assets from
     resourceRootUrl:
     # -- Ingress TLS configuration
