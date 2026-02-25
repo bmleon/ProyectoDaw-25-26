@@ -1,79 +1,66 @@
 #!/bin/bash
 set -e
 
+# Configuración de variables personalizadas
+REPO_PERSONAL="https://github.com/bmleon/ProyectoDaw-25-26.git"
 INFORME=/root/logs/informe.log
+
 setup_ssh_k8s(){
     echo "Configurando SSH desde volumen temporal..."
     mkdir -p /root/.ssh
     
-    # Copiamos del volumen de solo lectura (/tmp/ssh_keys) a la carpeta real (/root/.ssh)
     if [ -f "/tmp/ssh_keys/id_ed25519" ]; then
         cp /tmp/ssh_keys/id_ed25519 /root/.ssh/id_ed25519
         cp /tmp/ssh_keys/id_ed25519.pub /root/.ssh/id_ed25519.pub
         
-        # Ahora sí podemos cambiar permisos porque son copias nuestras
         chmod 700 /root/.ssh
         chmod 600 /root/.ssh/id_ed25519
         chmod 644 /root/.ssh/id_ed25519.pub
     fi
 
-    # Generamos known_hosts (ahora sí podemos escribir)
     ssh-keyscan github.com > /root/.ssh/known_hosts 2>/dev/null
 }
 
 config_git(){
-    if [$? -ne 0]; then
-        echo "Error de configuracion de git. Abortando." >> $INFORME
-        exit 1
-    fi
-
-    ls -la /root/.ssh
-
-    git clone --filter=blob:none --no-checkout $REPO_GIT ukiyo-backend
+    echo "Clonando repositorio personal: $REPO_PERSONAL"
+    
+    # Clonamos usando la URL de tu repositorio directamente
+    git clone --filter=blob:none --no-checkout $REPO_PERSONAL ukiyo-backend
     cd ukiyo-backend
 
-    # con sparse-checkout init --cone --> copiamos los archivos directos del monorepositorio
-    # package.json, pnpm-lock.yaml, pnpm-workspace.yaml, tsconfig.json, .npmrc, .prettierrc, .eslintrc.json, .gitignore, etc
+    # Configuración de sparse-checkout para traer solo lo necesario
     git sparse-checkout init --cone
-
-    # Trae solo los subdirectorios que indiques (apps/${MICROSERVICIO} y libs)
     git sparse-checkout set apps/${MICROSERVICIO} libs
-    git checkout main
-
-    git pull origin main
-
+    
+    # Cambiado a 'master' que es tu rama actual
+    git checkout master
+    git pull origin master
 }
 
 main(){
-
     setup_ssh_k8s
 
     echo "Configurando Git"
-    # if ssh -T git@github.com
-        config_git
-    # fi
+    config_git
 
-    echo "Instalando microservicio"
-
+    echo "Instalando herramientas de Node"
     npm install -g npm@11.7.0 pnpm pm2
 
-    echo "Instalando dependencias"
+    echo "Instalando dependencias con pnpm"
     pnpm install --frozen-lockfile
 
-    echo "Arrancando Gateway con PM2"
+    echo "Arrancando microservicio con PM2"
     
-    # Limpieza preventiva
+    # Limpieza de procesos previos
     pm2 delete api-gateway 2>/dev/null || true
     
-    # Arrancamos el proceso
+    # Arrancamos el microservicio (usando el script de inicio de tu package.json)
     pm2 start pnpm --name "api-gateway" -- start:dev:gateway
 
-    echo "API-GATEWAY ONLINE (Puerto 3000)"
-    
+    echo "SISTEMA ONLINE"
 }
 
 main
-# tail -f /dev/null
 
-# Mantener el contenedor vivo mostrando logs
+# Mostrar logs para que el contenedor no se detenga
 pm2 logs api-gateway
