@@ -17,11 +17,11 @@ controller:
         repository: jenkins/jenkins
         tag: "lts-jdk21"
         pullPolicy: Always
-  jenkinsUrl: "http://jenkins.ukiyocazorla.es"
+  jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"  # <-- Corregido
   ingress:
     enabled: true
     className: nginx
-    host: jenkins.ukiyocazorla.es
+    host: jenkins-bmleon.ukiyocazorla.es               # <-- Corregido
   initContainerEnv:
     - name: JAVA_TOOL_OPTIONS
       value: "-Djava.net.preferIPv4Stack=true"
@@ -49,6 +49,7 @@ controller:
   installLatestPlugins: true
   installLatestSpecifiedPlugins: true
   javaOpts: "-Djava.net.preferIPv4Stack=true"
+
 agent:
   enabled: true
   runAsUser: 0

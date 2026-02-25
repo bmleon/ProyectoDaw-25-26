@@ -17,6 +17,6 @@ service:
 ingress:
   enabled: true
   className: nginx
-  host: jenkins-bmleon.ukiyocazorla.es
+  host: admin-ukiyo.ukiyocazorla.es
   path: /
   pathType: Prefix
