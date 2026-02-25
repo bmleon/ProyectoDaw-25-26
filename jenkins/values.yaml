@@ -25,10 +25,15 @@ controller:
   jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
 
   ingress:
-    enabled: true
-    ingressClassName: nginx
-    hosts:
-      - jenkins-bmleon.ukiyocazorla.es
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: jenkins-bmleon.ukiyocazorla.es
+      paths:
+        - path: /
+          pathType: Prefix
 
   initContainerEnv:
     - name: JAVA_TOOL_OPTIONS
