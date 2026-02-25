@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../../../node_modules/@prisma-client/ms-usuarios"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  roles     Rol[]
+  isActive  Boolean  @default(true)
+  
+  // Relaciones
+  perfil    Perfil?
+  empleado  Empleado?
+  accesos   Acceso[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("Usuario")
+}
+
+model Rol {
+  id    Int       @id @default(autoincrement())
+  name  String    @unique
+  
+  // Relación inversa (Prisma crea la tabla intermedia solo)
+  users Usuario[]
+}
+model Perfil {
+  id        Int     @id @default(autoincrement())
+  nombre    String
+  apellido  String
+  telefono  String?
+  direccion String?
+  
+  // Clave foránea a Usuario (1 a 1)
+  userId    String  @unique 
+  user      Usuario @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("Perfil")
+
+}
+
+model Empleado {
+  id                Int       @id @default(autoincrement())
+  userId            String    @unique 
+  usuario           Usuario   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  puesto            String
+  salario           Float     
+  departamento      String?
+  fechaContratacion DateTime? @default(now())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("Empleado")
+
+}
+
+model Acceso {
+  id          Int      @id @default(autoincrement())
+  fechaHora   DateTime @default(now())
+  ipOrigen    String
+  resultado   String
+  
+  // Relación N:1 con Usuario (Muchos accesos pertenecen a un usuario)
+  userId      String
+  user        Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("Accesos")
+}

@@ -1,0 +1,55 @@
+controller:
+  runAsUser: 0
+  fsGroup: 0
+  admin:
+    username: admin
+    password: admin123
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClass: microk8s-hostpath
+  serviceType: NodePort
+  nodePort: 30080
+  sidecars:
+    configAutoReload:
+      enabled: true
+      image:
+        repository: jenkins/jenkins
+        tag: "lts-jdk21"
+        pullPolicy: Always
+  jenkinsUrl: "http://jenkins.ukiyocazorla.es"
+  ingress:
+    enabled: true
+    className: nginx
+    host: jenkins.ukiyocazorla.es
+  initContainerEnv:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-Djava.net.preferIPv4Stack=true"
+    - name: JENKINS_UC_DOWNLOAD
+      value: "https://get.jenkins.io/plugins"
+  env:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-Djava.net.preferIPv4Stack=true"
+    - name: JENKINS_UC_DOWNLOAD
+      value: "https://get.jenkins.io/plugins"
+    - name: JENKINS_UC_DOWNLOAD_URL
+      value: "https://get.jenkins.io/plugins"
+  additionalPlugins: []
+  installPlugins:
+    - kubernetes
+    - workflow-aggregator
+    - git
+    - github
+    - docker-workflow
+    - credentials-binding
+    - timestamper
+    - pipeline-stage-view
+    - ws-cleanup
+    - configuration-as-code
+  installLatestPlugins: true
+  installLatestSpecifiedPlugins: true
+  javaOpts: "-Djava.net.preferIPv4Stack=true"
+agent:
+  enabled: true
+  runAsUser: 0
+  runAsGroup: 0

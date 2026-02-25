@@ -1,0 +1,41 @@
+{{- if .Values.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.container.name }}-deployment
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.app.container.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.container.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.container.name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: {{ .Values.app.container.name }}
+          # Usamos comillas para evitar errores de parseo si hay caracteres raros
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          imagePullPolicy: "{{ .Values.app.image.pullPolicy }}"
+          ports:
+            - containerPort: {{ .Values.app.containerPort }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.app.container.name }}-config
+          
+          # Configuración de volumen SSH
+          volumeMounts:
+            - name: ssh-keys-vol
+              mountPath: "/tmp/ssh_keys"
+              readOnly: true
+
+      volumes:
+        - name: ssh-keys-vol
+          secret:
+            secretName: ssh-key-secret
+            defaultMode: 0400
+{{- end }}

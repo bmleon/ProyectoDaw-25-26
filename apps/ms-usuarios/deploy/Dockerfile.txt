@@ -1,0 +1,25 @@
+FROM ubuntu
+
+RUN apt update && apt install -yq --no-install-recommends \
+    git curl
+
+# ENV PROYECTO="./proyectos/UkiyoApp"
+# ENV MS_GW =".proyectos/UkiyoApp/apps/ms-usuarios"
+
+# WORKDIR /app
+# COPY ${MS_GW}/deploy/start.sh .
+# COPY ${PROYECTO}/package.json .
+# COPY ${PROYECTO}/pnpm-workspace.yaml .
+# COPY ${PROYECTO}/pnpm-lock.yaml .
+# COPY ${PROYECTO}/.npmrc .
+# COPY ${PROYECTO}/tsconfig.json .
+# COPY ${PROYECTO}/nest-cli.json .
+
+# COPY ${PROYECTO}/libs ./libs
+# COPY ${PROYECTO}/apps/ms-usuarios ./apps/ms-usuarios
+
+# RUN chmod +x ./start.sh
+EXPOSE 3000
+
+# ENTRYPOINT [ "./start.sh" ]
+CMD ["tail", "-f", "/dev/null"]

@@ -1,0 +1,26 @@
+enabled: true
+
+app:
+  name: ukiyo-ms-clientes
+  replicas: 1
+  containerPort: 3002
+  image:
+    repository: fabricio07/ukiyo-ms-clientes
+    tag: "latest"
+    pullPolicy: Always
+
+postgres:
+  user: "user_clientes"
+  password: "password_clientes"
+  db: "bd_clientes"
+  port: 5432
+  image: "postgres:15-alpine"
+  service:
+    type: NodePort
+    nodePort: 30433
+
+global:
+  nats:
+    url: "nats://nats-service:4222"
+  env:
+    REPO_GIT: git@github.com:Backend-ukiyo/ukiyo-backend.git

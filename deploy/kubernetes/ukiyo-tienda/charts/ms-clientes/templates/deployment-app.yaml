@@ -1,0 +1,39 @@
+{{- if .Values.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}-deployment
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: {{ .Values.app.name }}
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          imagePullPolicy: "{{ .Values.app.image.pullPolicy }}"
+          ports:
+            - containerPort: {{ .Values.app.containerPort }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.app.name }}-config
+            - secretRef:
+                name: {{ .Values.app.name }}-postgres-secret
+          volumeMounts:
+            - name: ssh-keys-vol
+              mountPath: "/tmp/ssh_keys"
+              readOnly: true
+      volumes:
+        - name: ssh-keys-vol
+          secret:
+            secretName: ssh-key-secret
+            defaultMode: 0400
+{{- end }}

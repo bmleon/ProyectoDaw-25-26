@@ -1,0 +1,40 @@
+services:
+  postgresUsuarios:
+    image: postgres:15-alpine
+    container_name: ukiyoBD-ms-usuarios
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - ukiyo-network
+
+  ms-usuarios:
+    # profiles: ["usuarios"]
+    build:
+      context: ../../../
+      dockerfile: ./apps/${MICROSERVICIO}/deploy/Dockerfile
+      args:
+        - MICROSERVICIO=${MICROSERVICIO}
+    container_name: ukiyo-${MICROSERVICIO}
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    networks:
+      - ukiyo-network
+    # ports:
+    #   - "${PORT}:3001"
+
+volumes:
+  postgres_data:
+
+networks:
+  ukiyo-network:
+    external: true

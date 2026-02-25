@@ -1,0 +1,1 @@
+export const CLIENTES_SERVICE = 'CLIENTES_SERVICE'; // Si necesita hablar con clientes

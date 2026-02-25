@@ -1,0 +1,16 @@
+{{- if .Values.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.app.name }}-config
+  namespace: {{ .Release.Namespace }}
+data:
+  PORT: {{ .Values.app.containerPort | quote }}
+  DATABASE_URL: "postgresql://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@{{ .Values.app.name }}-postgres:{{ .Values.postgres.port }}/{{ .Values.postgres.db }}"
+  NATS_SERVERS: {{ .Values.global.nats.url | quote }}
+  REPO_GIT: {{ .Values.global.env.REPO_GIT | quote }}
+  DB_HOST: "{{ .Values.app.name }}-postgres"
+  DB_PORT: {{ .Values.postgres.port | quote }}
+  DB_NAME: {{ .Values.postgres.db | quote }}
+  DB_USERNAME: {{ .Values.postgres.user | quote }}
+{{- end }}

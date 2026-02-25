@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ukiyoBD-ms-usuarios
+    env_file:
+      - .env
+    # restart: unless-stopped
+    environment:
+      CONTEXT: /home/fabri/devops/DespAW/Docker
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: bd_usuarios
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT}:5432"
+    networks: 
+      - ukiyo-network
+
+  ms_usuarios:
+      profiles: ["usuarios"]
+      build:
+        context: ${CONTEXTO}
+        dockerfile: .proyectos/UkiyoApp/apps/${MICROSERVICIO}/deploy/Dockerfile
+        args:
+          - CONTEXTO=${CONTEXTO}
+          - MICROSERVICIO=${MICROSERVICIO}
+      container_name: ukiyo-${MICROSERVICIO}
+      restart: unless-stopped
+      ports:
+        - "${MS_PORT}:3001"
+      env_file:
+        - .env
+      environment:
+        - NODE_ENV = production
+        - USUARIOS_TCP_PORT=3001
+        - USUARIOS_DB_HOST=db_usuarios
+        - USUARIOS_DB_PORT=5432
+        - USUARIOS_DB_USER=user_usuarios
+        - USUARIOS_DB_PASS=password_usuarios
+        - USUARIOS_DB_NAME=bd_usuarios
+        - DATABASE_URL=postgresql://user_usuarios:password_usuarios@db_usuarios:5432/bd_usuarios
+    # depends_on: [db_usuarios]
+    # se crea la red --> no lleva subnet
+      networks: ukiyo-network

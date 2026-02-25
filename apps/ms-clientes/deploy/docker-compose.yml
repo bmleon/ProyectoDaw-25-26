@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ukiyoBD-ms-clientes
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - ukiyo-network
+
+  ms-clientes:
+    build:
+      context: ../../../
+      dockerfile: ./apps/ms-clientes/deploy/Dockerfile
+      args:
+        - MICROSERVICIO=ms-clientes
+        - CONTEXTO=${CONTEXTO}
+    container_name: ukiyo-ms-clientes
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+    networks:
+      - ukiyo-network
+
+volumes:
+  postgres_data:
+
+networks:
+  ukiyo-network:
+    external: true

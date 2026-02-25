@@ -1,0 +1,312 @@
+services:
+  # --- GATEWAY ---
+  api-gateway:
+    build:
+      context: .
+      dockerfile: apps/api-gateway/Dockerfile
+    container_name: gateway_container
+    restart: always
+    ports:
+      - "3000:3000" # Puerto Público HTTP
+    environment:
+      - PORT=3000
+      # Conexión con Microservicios Delivery
+      - USUARIOS_HOST=ms_usuarios
+      - USUARIOS_PORT=3001
+      - CLIENTES_HOST=ms_clientes
+      - CLIENTES_PORT=3002
+      - PRODUCTOS_HOST=ms_productos
+      - PRODUCTOS_PORT=3003
+      - PROVEEDORES_HOST=ms_proveedores
+      - PROVEEDORES_PORT=3004
+      - PEDIDOS_DEL_HOST=ms_pedidos_del
+      - PEDIDOS_DEL_PORT=3005
+      - INVENTARIO_HOST=ms_inventario
+      - INVENTARIO_PORT=3006
+      - PEDIDOS_CAT_HOST=ms_pedidos_cat
+      - PEDIDOS_CAT_PORT=3007
+      - EVENTO_HOST=ms_evento
+      - EVENTO_PORT=3008
+    depends_on:
+      - ms_usuarios
+      - ms_clientes
+      - ms_productos
+      - ms_proveedores
+      - ms_pedidos_del
+      - ms_inventario
+      - ms_pedido_cat
+      - ms_evento
+    networks: [backend_network]
+
+  # --- MS USUARIOS ---
+  db_usuarios:
+    image: postgres:15-alpine
+    container_name: db_usuarios_container
+    env_file:
+      - .env
+    restart: always
+    environment:
+      CONTEXT: /home/fabri/devops/DespAW/Docker
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - usuarios_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432" # DBeaver
+    networks: [backend_network]
+
+  ms_usuarios:
+    profiles: ["usuarios"]
+    build:
+      context: .
+      dockerfile: apps/ms-usuarios/Dockerfile
+    container_name: ms_usuarios_container
+    restart: always
+    environment:
+      - USUARIOS_TCP_PORT=3001
+      - USUARIOS_DB_HOST=db_usuarios
+      - USUARIOS_DB_PORT=5432
+      - USUARIOS_DB_USER=user_usuarios
+      - USUARIOS_DB_PASS=password_usuarios
+      - USUARIOS_DB_NAME=bd_usuarios
+      - DATABASE_URL=postgresql://user_usuarios:password_usuarios@db_usuarios:5432/bd_usuarios
+    depends_on: [db_usuarios]
+    networks: [backend_network]
+
+  # --- MS CLIENTES ---
+  db_clientes:
+    image: postgres:15-alpine
+    container_name: db_clientes_container
+    restart: always
+    environment:
+      POSTGRES_USER: user_clientes
+      POSTGRES_PASSWORD: password_clientes
+      POSTGRES_DB: bd_clientes
+    volumes:
+      - clientes_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432" # DBeaver
+    networks: [backend_network]
+
+  ms_clientes:
+    build:
+      context: .
+      dockerfile: apps/ms-clientes/Dockerfile
+    container_name: ms_clientes_container
+    restart: always
+    environment:
+      - MS_PORT=3002
+      - DB_HOST=db_clientes
+      - DB_PORT=5432
+      - DB_USERNAME=user_clientes
+      - DB_PASSWORD=password_clientes
+      - DB_DATABASE=bd_clientes
+    depends_on: [db_clientes]
+    networks: [backend_network]
+
+  # --- MS PRODUCTOS  ---
+  db_productos:
+    image: postgres:15-alpine
+    container_name: db_productos_container
+    restart: always
+    environment:
+      POSTGRES_USER: user_productos
+      POSTGRES_PASSWORD: password_productos
+      POSTGRES_DB: bd_productos
+    volumes:
+      - productos_data:/var/lib/postgresql/data
+    ports:
+      - "5436:5432" # DBeaver
+    networks: [backend_network]
+
+  ms_productos:
+    build:
+      context: .
+      dockerfile: apps/ms-productos/Dockerfile
+    container_name: ms_productos_container
+    restart: always
+    environment:
+      - MS_PORT=3003
+      - DB_HOST=db_productos
+      - DB_PORT=5432
+      - DB_USERNAME=user_productos
+      - DB_PASSWORD=password_productos
+      - DB_DATABASE=bd_productos
+    depends_on: [db_productos]
+    networks: [backend_network]
+
+  # --- MS PROVEEDORES ---
+  db_proveedores:
+    image: postgres:15-alpine
+    container_name: db_proveedores_container
+    restart: always
+    environment:
+      POSTGRES_USER: user_proveedores
+      POSTGRES_PASSWORD: password_proveedores
+      POSTGRES_DB: bd_proveedores
+    volumes:
+      - proveedores_data:/var/lib/postgresql/data
+    ports:
+      - "5438:5432" # DBeaver
+    networks: [backend_network]
+
+  ms_proveedores:
+    build:
+      context: .
+      dockerfile: apps/ms-proveedores/Dockerfile
+    container_name: ms_proveedores_container
+    restart: always
+    environment:
+      - MS_PORT=3005
+      - DB_HOST=db_proveedores
+      - DB_PORT=5432
+      - DB_USERNAME=user_proveedores
+      - DB_PASSWORD=password_proveedores
+      - DB_DATABASE=bd_proveedores
+    depends_on: [db_proveedores]
+    networks: [backend_network]
+
+  # --- MS PEDIDOS (DELIVERY) ---
+  db_pedidos_del:
+    image: postgres:15-alpine
+    container_name: db_pedidos_del_container
+    restart: always
+    environment:
+      POSTGRES_USER: user_pedidos
+      POSTGRES_PASSWORD: password_pedidos
+      POSTGRES_DB: bd_pedidos
+    volumes:
+      - pedidos_del_data:/var/lib/postgresql/data
+    ports:
+      - "5439:5432" # DBeaver
+    networks: [backend_network]
+
+  ms_pedidos_del:
+    build:
+      context: .
+      dockerfile: apps/ms-pedidos/Dockerfile
+    container_name: ms_pedidos_del_container
+    restart: always
+    environment:
+      - MS_PORT=3006
+      - DB_HOST=db_pedidos_del
+      - DB_PORT=5432
+      - DB_USERNAME=user_pedidos
+      - DB_PASSWORD=password_pedidos
+      - DB_DATABASE=bd_pedidos
+    depends_on: [db_pedidos_del]
+    networks: [backend_network]
+
+  # --- MS INVENTARIO ---
+  db_inventario:
+    image: postgres:15-alpine
+    container_name: db_inventario_container
+    restart: always
+    environment:
+      POSTGRES_USER: user_inventario
+      POSTGRES_PASSWORD: password_inventario
+      POSTGRES_DB: bd_inventario
+    volumes:
+      - inventario_data:/var/lib/postgresql/data
+    ports:
+      - "5437:5432" # DBeaver
+    networks: [backend_network]
+
+  ms_inventario:
+    build:
+      context: .
+      dockerfile: apps/ms-inventario/Dockerfile
+    container_name: ms_inventario_container
+    restart: always
+    environment:
+      - MS_PORT=3004
+      - DB_HOST=db_inventario
+      - DB_PORT=5432
+      - DB_USERNAME=user_inventario
+      - DB_PASSWORD=password_inventario
+      - DB_DATABASE=bd_inventario
+    depends_on: [db_inventario]
+    networks: [backend_network]
+
+  # --- MS PEDIDO (CATERING) ---
+  db_pedido_cat:
+    image: postgres:15-alpine
+    container_name: db_pedido_cat_container
+    restart: always
+    environment:
+      POSTGRES_USER: user_cat_order
+      POSTGRES_PASSWORD: password_cat_order
+      POSTGRES_DB: bd_cat_pedido
+    volumes:
+      - pedido_cat_data:/var/lib/postgresql/data
+    ports:
+      - "5443:5432" # DBeaver
+    networks: [backend_network]
+
+  ms_pedido_cat:
+    build:
+      context: .
+      dockerfile: apps/ms-pedido/Dockerfile
+    container_name: ms_pedido_cat_container
+    restart: always
+    environment:
+      - MS_PORT=4004
+      - DB_HOST=db_pedido_cat
+      - DB_PORT=5432
+      - DB_USERNAME=user_cat_order
+      - DB_PASSWORD=password_cat_order
+      - DB_DATABASE=bd_cat_pedido
+    depends_on: [db_pedido_cat]
+    networks: [backend_network]
+
+  # --- MS EVENTO ---
+  db_evento:
+    image: postgres:15-alpine
+    container_name: db_evento_container
+    restart: always
+    environment:
+      POSTGRES_USER: user_event
+      POSTGRES_PASSWORD: password_event
+      POSTGRES_DB: bd_evento
+    volumes:
+      - evento_data:/var/lib/postgresql/data
+    ports:
+      - "5442:5432" # DBeaver
+    networks: [backend_network]
+
+  ms_evento:
+    build:
+      context: .
+      dockerfile: apps/ms-evento/Dockerfile
+    container_name: ms_evento_container
+    restart: always
+    environment:
+      - MS_PORT=4003
+      - DB_HOST=db_evento
+      - DB_PORT=5432
+      - DB_USERNAME=user_event
+      - DB_PASSWORD=password_event
+      - DB_DATABASE=bd_evento
+    depends_on: [db_evento]
+    networks: [backend_network]
+
+
+# --- VOLÚMENES PARA PERSISTENCIA DE DATOS ---
+volumes:
+  # Apps
+  usuarios_data:
+  clientes_data:
+  productos_data:
+  proveedores_data:
+  pedidos_del_data:
+  inventario_data:
+  pedido_cat_data:
+  evento_data:
+
+# --- RED COMPARTIDA ---
+networks:
+  backend_network:
+    driver: bridge

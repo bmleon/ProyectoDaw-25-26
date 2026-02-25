@@ -1,0 +1,22 @@
+app:
+  name: ukiyo-ms-usuarios
+  containerPort: 3000
+  image:
+    repository: fabricio07/ukiyo-ms-usuarios
+    tag: latest
+    pullPolicy: Always
+  replicas: 1
+
+postgres:
+    image: postgres:15-alpine
+    user: user_usuarios
+    password: password_usuarios
+    db: bd_usuarios
+    port: 5432
+    storageSize: 1Gi
+    service:
+      type: NodePort
+      nodePort: 30432
+
+env:
+  jwtSecret: 88dd961b931da785b8f619e891a4bd4f
