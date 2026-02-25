@@ -1,6 +1,6 @@
-app:
+app: 
   image: 
-    repository: fabricio07/ukiyo-api-gateway
+    repository: bmleon/ukiyo-api-gateway
     tag: latest
     pullPolicy: Always
   containerPort: 3000
@@ -17,6 +17,6 @@ service:
 ingress:
   enabled: true
   className: nginx
-  host: ukiyocazorla.es
+  host: 38.242.240.106
   path: /
   pathType: Prefix
