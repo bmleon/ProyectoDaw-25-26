@@ -11,8 +11,8 @@ controller:
     size: 8Gi
     storageClass: microk8s-hostpath
 
-  serviceType: NodePort
-  nodePort: 30080
+  # IMPORTANTE: Para que funcione el Ingress
+  serviceType: ClusterIP
 
   sidecars:
     configAutoReload:
@@ -28,10 +28,7 @@ controller:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - host: jenkins-bmleon.ukiyocazorla.es
-        paths:
-          - path: /
-            pathType: Prefix
+      - jenkins-bmleon.ukiyocazorla.es
 
   initContainerEnv:
     - name: JAVA_TOOL_OPTIONS
