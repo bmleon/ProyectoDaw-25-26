@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ukiyo-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ukiyo-admin
+  template:
+    metadata:
+      labels:
+        app: ukiyo-admin
+    spec:
+      containers:
+      - name: ukiyo-admin
+        image: bmleon/ukiyo-admin:latest
+        ports:
+        - containerPort: 3000 # Puerto que expone Nitro en el Dockerfile
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ukiyo-admin-service
+spec:
+  selector:
+    app: ukiyo-admin
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

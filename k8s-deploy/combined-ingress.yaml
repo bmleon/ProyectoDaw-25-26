@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: combined-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: jenkins-bmleon.ukiyocazorla.es
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jenkins # Asegúrate de que este nombre coincida con tu instalación de Helm
+            port:
+              number: 8080
+  - host: admin-ukiyo.ukiyocazorla.es
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ukiyo-admin-service
+            port:
+              number: 80
