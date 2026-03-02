@@ -3,9 +3,11 @@ kind: Ingress
 metadata:
   name: combined-ingress
   annotations:
-    kubernetes.io/ingress.class: "public"
+    # Quitamos la anotación de ingress.class para evitar el warning
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
+  # Esta es la línea clave que debe sustituir a la anotación
+  ingressClassName: public 
   rules:
   - host: jenkins-bmleon.ukiyocazorla.es
     http:
