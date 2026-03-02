@@ -3,9 +3,9 @@ kind: Ingress
 metadata:
   name: combined-ingress
   annotations:
+    kubernetes.io/ingress.class: "public"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
-  ingressClassName: public  # <-- Añade esta línea aquí
   rules:
   - host: jenkins-bmleon.ukiyocazorla.es
     http:
