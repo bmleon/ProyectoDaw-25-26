@@ -2,11 +2,14 @@ jenkins:
   controller:
     componentName: "jenkins-controller"
     jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
-    runAsUser: 0
-    fsGroup: 0
+
+    runAsUser: 1000
+    fsGroup: 1000
+
     admin:
       username: "admin"
       password: "admin123"
+
     resources:
       requests:
         cpu: "50m"
@@ -14,18 +17,14 @@ jenkins:
       limits:
         cpu: "1000m"
         memory: "1536Mi"
+
     persistence:
       enabled: true
-      size: "8Gi"
       storageClass: "microk8s-hostpath"
+      size: "8Gi"
+
     serviceType: ClusterIP
-    sidecars:
-      configAutoReload:
-        enabled: true
-        image:
-          repository: "kiwigrid/k8s-sidecar"
-          tag: "1.24.4"
-        urlJenkins: "http://jenkins-bmleon.ukiyocazorla.es"
+
     ingress:
       enabled: true
       ingressClassName: "nginx"
@@ -33,6 +32,7 @@ jenkins:
       path: "/"
       annotations:
         nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+
     installPlugins:
       - kubernetes:4306.vc91e951ea_eb_d
       - workflow-aggregator:600.vb_57cdd26fdd7
@@ -44,17 +44,12 @@ jenkins:
       - pipeline-stage-view
       - ws-cleanup
       - configuration-as-code:1929.v036b_5a_e1f123
+
     installLatestPlugins: true
+
     javaOpts: "-Djava.net.preferIPv4Stack=true"
-    initScripts:
-      install-kubectl: |
-        import hudson.model.*
-        import jenkins.model.*
-        def proc = "curl -LO https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl".execute()
-        proc.waitFor()
-        "chmod +x kubectl".execute().waitFor()
-        "mv kubectl /usr/local/bin/kubectl".execute().waitFor()
+
   agent:
     enabled: true
-    runAsUser: 0
-    runAsGroup: 0
+    runAsUser: 1000
+    runAsGroup: 1000
