@@ -2,16 +2,11 @@ jenkins:
   controller:
     componentName: "jenkins-controller"
     jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
-    JCasC:
-      enabled: false
-
     runAsUser: 1000
     fsGroup: 1000
-
     admin:
       username: "admin"
       password: "admin123"
-
     resources:
       requests:
         cpu: "50m"
@@ -19,14 +14,11 @@ jenkins:
       limits:
         cpu: "1000m"
         memory: "1536Mi"
-
     persistence:
       enabled: true
       storageClass: "microk8s-hostpath"
       size: "8Gi"
-
     serviceType: ClusterIP
-
     ingress:
       enabled: true
       ingressClassName: "nginx"
@@ -34,17 +26,16 @@ jenkins:
       path: "/"
       annotations:
         nginx.ingress.kubernetes.io/proxy-body-size: "50m"
-
     installPlugins:
       - kubernetes
       - workflow-aggregator
       - git
       - docker-workflow
-
     installLatestPlugins: false
-
     javaOpts: "-Djava.net.preferIPv4Stack=true"
-
+    sidecars:
+      configAutoReload:
+        enabled: false
   agent:
     enabled: true
     runAsUser: 1000
