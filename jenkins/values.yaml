@@ -46,26 +46,14 @@ jenkins:
       - configuration-as-code:1929.v036b_5a_e1f123
     installLatestPlugins: true
     javaOpts: "-Djava.net.preferIPv4Stack=true"
-    customInitContainers:
-      - name: install-kubectl
-        image: bitnami/kubectl:latest
-        securityContext:
-          runAsUser: 0
-        command:
-          - sh
-          - -c
-          - cp /opt/bitnami/kubectl/bin/kubectl /tmp/kubectl/kubectl && chmod +x /tmp/kubectl/kubectl
-        volumeMounts:
-          - name: kubectl-bin
-            mountPath: /tmp/kubectl
-    additionalExistingClaimVolumes: []
-    additionalVolumes:
-      - name: kubectl-bin
-        emptyDir: {}
-    additionalVolumeMounts:
-      - name: kubectl-bin
-        mountPath: /usr/local/bin/kubectl
-        subPath: kubectl
+    initScripts:
+      install-kubectl: |
+        import hudson.model.*
+        import jenkins.model.*
+        def proc = "curl -LO https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl".execute()
+        proc.waitFor()
+        "chmod +x kubectl".execute().waitFor()
+        "mv kubectl /usr/local/bin/kubectl".execute().waitFor()
   agent:
     enabled: true
     runAsUser: 0
