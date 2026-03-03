@@ -1,48 +1,42 @@
-jenkins:
-  controller:
-    componentName: "jenkins-controller"
-    jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
-    admin:
-      username: "admin"
-      password: "admin123"
-    resources:
-      requests:
-        cpu: "50m"
-        memory: "512Mi"
-      limits:
-        cpu: "1000m"
-        memory: "1536Mi"
-    persistence:
-      enabled: true
-      storageClass: "microk8s-hostpath"
-      size: "8Gi"
-    serviceType: ClusterIP
-    ingress:
-      enabled: true
-      ingressClassName: "nginx"
-      hostName: "jenkins-bmleon.ukiyocazorla.es"
-      path: "/"
-      annotations:
-        nginx.ingress.kubernetes.io/proxy-body-size: "50m"
-        kubernetes.io/ingress.class: "nginx"
-    installPlugins:
-      - kubernetes
-      - workflow-aggregator
-      - git
-      - docker-workflow
-    installLatestPlugins: false
-    javaOpts: "-Djava.net.preferIPv4Stack=true"
-    sidecars:
-      configAutoReload:
-        enabled: false
-    jenkinsUrlProtocol: "http"
-    updateCenter:
-      url: "https://updates.jenkins.io/update-center.json"
-    downloadMirror: "https://updates.jenkins.io"
-  agent:
+controller:
+  componentName: "jenkins-controller"
+  jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  admin:
+    username: "admin"
+    password: "admin123"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1536Mi"
+  persistence:
     enabled: true
-    runAsUser: 1000
-    runAsGroup: 1000
+    storageClass: "microk8s-hostpath"
+    size: "8Gi"
+  serviceType: ClusterIP
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    hostName: "jenkins-bmleon.ukiyocazorla.es"
+    path: "/"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+  installPlugins:
+    - kubernetes
+    - workflow-aggregator
+    - git
+    - docker-workflow
+  installLatestPlugins: false
+  javaOpts: "-Djava.net.preferIPv4Stack=true"
+  sidecars:
+    configAutoReload:
+      enabled: false
+agent:
+  enabled: true
+  runAsUser: 1000
+  runAsGroup: 1000
