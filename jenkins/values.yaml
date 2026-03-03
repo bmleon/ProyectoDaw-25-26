@@ -3,7 +3,7 @@ jenkins:
     componentName: "jenkins-controller"
     jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
     
-    # CAMBIO CRÍTICO: Ejecutar como root para acceder al socket de Docker (/var/run/docker.sock)
+    # Permisos de root para acceder al socket de Docker sin restricciones
     runAsUser: 0
     runAsGroup: 0
     fsGroup: 0
@@ -41,17 +41,18 @@ jenkins:
       - workflow-aggregator:600.vb_57cdd26fdd7
       - git:5.7.0
       - docker-workflow:585.va_0768b_843e93
-      - configuration-as-code:2006.v001a_2ca_6b_574
     
     installLatestPlugins: false
     javaOpts: "-Djava.net.preferIPv4Stack=true"
     
+    # Desactivamos el Configuration as Code y sus contenedores sidecar que causan el CrashLoop
+    JCasC:
+      enabled: false
     sidecars:
       configAutoReload:
         enabled: false
 
   agent:
     enabled: true
-    # Los agentes también deben poder correr procesos si los usaras en el futuro
     runAsUser: 0
     runAsGroup: 0
