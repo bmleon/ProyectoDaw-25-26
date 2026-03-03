@@ -3,11 +3,10 @@ kind: Ingress
 metadata:
   name: combined-ingress
   annotations:
-    # Quitamos la anotación de ingress.class para evitar el warning
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
-  # Esta es la línea clave que debe sustituir a la anotación
-  ingressClassName: public 
+  ingressClassName: public
   rules:
   - host: jenkins-bmleon.ukiyocazorla.es
     http:
@@ -29,3 +28,13 @@ spec:
             name: ukiyo-admin-service
             port:
               number: 80
+  - host: argocd-bmleon.ukiyocazorla.es
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 443
