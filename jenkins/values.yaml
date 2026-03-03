@@ -58,10 +58,11 @@ jenkins:
         volumeMounts:
           - name: kubectl-bin
             mountPath: /tmp/kubectl
-    extraVolumes:
+    additionalExistingClaimVolumes: []
+    additionalVolumes:
       - name: kubectl-bin
         emptyDir: {}
-    extraVolumeMounts:
+    additionalVolumeMounts:
       - name: kubectl-bin
         mountPath: /usr/local/bin/kubectl
         subPath: kubectl
