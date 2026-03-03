@@ -46,9 +46,11 @@ jenkins:
       - configuration-as-code:1929.v036b_5a_e1f123
     installLatestPlugins: true
     javaOpts: "-Djava.net.preferIPv4Stack=true"
-    initContainers:
+    customInitContainers:
       - name: install-kubectl
         image: bitnami/kubectl:latest
+        securityContext:
+          runAsUser: 0
         command:
           - sh
           - -c
