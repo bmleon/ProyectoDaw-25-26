@@ -24,22 +24,6 @@ jenkins:
       storageClass: "microk8s-hostpath"
       size: "8Gi"
     
-    # --- Conexión física con Docker del servidor VPS ---
-    extraVolumes::
-      - name: docker-sock
-        hostPath:
-          path: /var/run/docker.sock
-      - name: docker-bin
-        hostPath:
-          path: /usr/bin/docker
-          
-    extraVolumeMounts::
-      - name: docker-sock
-        mountPath: /var/run/docker.sock
-      - name: docker-bin
-        mountPath: /usr/bin/docker
-    # ---------------------------------------------------
-    
     serviceType: ClusterIP
     
     ingress:
