@@ -1,46 +1,37 @@
 controller:
   componentName: "jenkins-controller"
   jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
-  
-  # Ejecución como root para evitar problemas de permisos en MicroK8s
   runAsUser: 0
   fsGroup: 0
-
   admin:
     username: "admin"
     password: "admin123"
-
   resources:
     requests:
       cpu: "50m"
-      memory: "512Mi" # Mínimo para que arranque en tu VPS
+      memory: "512Mi"
     limits:
       cpu: "1000m"
-      memory: "1536Mi" # Límite para no saturar tu RAM
-
+      memory: "1536Mi"
   persistence:
     enabled: true
     size: "8Gi"
     storageClass: "microk8s-hostpath"
-
   serviceType: ClusterIP
-
   sidecars:
     configAutoReload:
       enabled: true
       image:
-        repository: "kiwigrid/k8s-sidecar" # Imagen correcta para el sidecar
+        repository: "kiwigrid/k8s-sidecar"
         tag: "1.24.4"
       urlJenkins: "http://jenkins-bmleon.ukiyocazorla.es"
-
   ingress:
     enabled: true
-    ingressClassName: "nginx" # Clase correcta para tu Ingress
-    hostName: "jenkins-bmleon.ukiyocazorla.es" # Campo correcto según el Chart
+    ingressClassName: "nginx"
+    hostName: "jenkins-bmleon.ukiyocazorla.es"
     path: "/"
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: "50m"
-
   installPlugins:
     - kubernetes:4306.vc91e951ea_eb_d
     - workflow-aggregator:600.vb_57cdd26fdd7
@@ -52,10 +43,25 @@ controller:
     - pipeline-stage-view
     - ws-cleanup
     - configuration-as-code:1929.v036b_5a_e1f123
-
   installLatestPlugins: true
   javaOpts: "-Djava.net.preferIPv4Stack=true"
-
+  initContainers:
+    - name: install-kubectl
+      image: bitnami/kubectl:latest
+      command:
+        - sh
+        - -c
+        - cp /opt/bitnami/kubectl/bin/kubectl /tmp/kubectl/kubectl && chmod +x /tmp/kubectl/kubectl
+      volumeMounts:
+        - name: kubectl-bin
+          mountPath: /tmp/kubectl
+  extraVolumes:
+    - name: kubectl-bin
+      emptyDir: {}
+  extraVolumeMounts:
+    - name: kubectl-bin
+      mountPath: /usr/local/bin/kubectl
+      subPath: kubectl
 agent:
   enabled: true
   runAsUser: 0
