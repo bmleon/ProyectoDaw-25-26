@@ -37,10 +37,10 @@ jenkins:
         kubernetes.io/ingress.class: "nginx"
     
     installPlugins:
-      - kubernetes:4306.vc91e951ea_eb_d
-      - workflow-aggregator:600.vb_57cdd26fdd7
-      - git:5.7.0
-      - docker-workflow:585.va_0768b_843e93
+      - kubernetes
+      - workflow-aggregator
+      - git
+      - docker-workflow
     
     installLatestPlugins: false
     javaOpts: "-Djava.net.preferIPv4Stack=true"
