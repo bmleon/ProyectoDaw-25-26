@@ -2,6 +2,8 @@ jenkins:
   controller:
     componentName: "jenkins-controller"
     jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
+    JCasC:
+      enabled: false
 
     runAsUser: 1000
     fsGroup: 1000
