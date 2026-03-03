@@ -25,7 +25,7 @@ jenkins:
       size: "8Gi"
     
     # --- Conexión física con Docker del servidor VPS ---
-    volumes:
+    extraVolumes::
       - name: docker-sock
         hostPath:
           path: /var/run/docker.sock
@@ -33,7 +33,7 @@ jenkins:
         hostPath:
           path: /usr/bin/docker
           
-    volumeMounts:
+    extraVolumeMounts::
       - name: docker-sock
         mountPath: /var/run/docker.sock
       - name: docker-bin
