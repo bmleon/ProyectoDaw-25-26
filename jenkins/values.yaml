@@ -2,23 +2,31 @@ jenkins:
   controller:
     componentName: "jenkins-controller"
     jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
-    runAsUser: 1000
-    fsGroup: 1000
+    
+    # CAMBIO CRÍTICO: Ejecutar como root para acceder al socket de Docker (/var/run/docker.sock)
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
+    
     admin:
       username: "admin"
       password: "admin123"
+    
     resources:
       requests:
-        cpu: "50m"
+        cpu: "100m"
         memory: "512Mi"
       limits:
         cpu: "1000m"
         memory: "1536Mi"
+    
     persistence:
       enabled: true
       storageClass: "microk8s-hostpath"
       size: "8Gi"
+    
     serviceType: ClusterIP
+    
     ingress:
       enabled: true
       ingressClassName: "nginx"
@@ -26,17 +34,24 @@ jenkins:
       path: "/"
       annotations:
         nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+        kubernetes.io/ingress.class: "nginx"
+    
     installPlugins:
-      - kubernetes
-      - workflow-aggregator
-      - git
-      - docker-workflow
+      - kubernetes:4306.vc91e951ea_eb_d
+      - workflow-aggregator:600.vb_57cdd26fdd7
+      - git:5.7.0
+      - docker-workflow:585.va_0768b_843e93
+      - configuration-as-code:2006.v001a_2ca_6b_574
+    
     installLatestPlugins: false
     javaOpts: "-Djava.net.preferIPv4Stack=true"
+    
     sidecars:
       configAutoReload:
         enabled: false
+
   agent:
     enabled: true
-    runAsUser: 1000
-    runAsGroup: 1000
+    # Los agentes también deben poder correr procesos si los usaras en el futuro
+    runAsUser: 0
+    runAsGroup: 0
