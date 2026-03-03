@@ -4,7 +4,6 @@ metadata:
   name: combined-ingress
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   ingressClassName: public
   rules:
@@ -28,13 +27,3 @@ spec:
             name: ukiyo-admin-service
             port:
               number: 80
-  - host: argocd-bmleon.ukiyocazorla.es
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: argocd-server
-            port:
-              number: 443
