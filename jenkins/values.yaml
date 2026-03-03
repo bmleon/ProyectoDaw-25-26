@@ -3,10 +3,9 @@ jenkins:
     componentName: "jenkins-controller"
     jenkinsUrl: "http://jenkins-bmleon.ukiyocazorla.es"
     
-    # Permisos de root para acceder al socket de Docker sin restricciones
-    runAsUser: 0
-    runAsGroup: 0
-    fsGroup: 0
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
     
     admin:
       username: "admin"
@@ -24,6 +23,22 @@ jenkins:
       enabled: true
       storageClass: "microk8s-hostpath"
       size: "8Gi"
+    
+    # --- Conexión física con Docker del servidor VPS ---
+    volumes:
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: docker-bin
+        hostPath:
+          path: /usr/bin/docker
+          
+    volumeMounts:
+      - name: docker-sock
+        mountPath: /var/run/docker.sock
+      - name: docker-bin
+        mountPath: /usr/bin/docker
+    # ---------------------------------------------------
     
     serviceType: ClusterIP
     
@@ -45,7 +60,6 @@ jenkins:
     installLatestPlugins: false
     javaOpts: "-Djava.net.preferIPv4Stack=true"
     
-    # Desactivamos el Configuration as Code y sus contenedores sidecar que causan el CrashLoop
     JCasC:
       enabled: false
     sidecars:
@@ -54,5 +68,5 @@ jenkins:
 
   agent:
     enabled: true
-    runAsUser: 0
-    runAsGroup: 0
+    runAsUser: 1000
+    runAsGroup: 1000
